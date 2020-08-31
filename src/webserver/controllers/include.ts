@@ -2,7 +2,7 @@ import {IResolvers} from "apollo-server-express";
 import {Router} from "express";
 import {DefinitionNode, Location} from "graphql/language/ast";
 import {RedirectionController} from "./rest/RedirectionController";
-import {RootTypeController} from "./graphql/RootTypeController";
+import {RootTypeController} from "./graphql/root-type.controller";
 
 export type DocumentNode = {
     readonly kind: 'Document';
