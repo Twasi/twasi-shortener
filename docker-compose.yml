@@ -4,6 +4,8 @@ services:
     build: .
     container_name: "twasi-redirector"
     image: debian/latest
+    volumes:
+    - ./data/app/:/usr/src/app/
     ports:
       - 80:80
     links:
