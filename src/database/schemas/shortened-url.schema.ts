@@ -1,7 +1,24 @@
 import {Schema, SchemaOptions} from "mongoose";
-import {DBShortenedUrl} from "../../models/shortened-url.model";
+import {DBShortenedUrl, ShortenedUrlCreatorType} from "../../models/shortened-url.model";
+import * as mongoose from "mongoose";
 
-export const UserSchema = new Schema<DBShortenedUrl>({
+const CreatorSubSchema = new Schema({
+    type: {
+        type: String,
+        required: true,
+        enum: Object.values(ShortenedUrlCreatorType),
+    },
+    id: {
+        type: String,
+        required: false,
+    },
+    ip: {
+        type: String,
+        required: false,
+    }
+});
+
+export const DBShortenedUrlSchema = new Schema<DBShortenedUrl>({
     short: {
         type: String,
         required: true,
@@ -38,4 +55,10 @@ export const UserSchema = new Schema<DBShortenedUrl>({
             message: 'The url is not valid.'
         }
     },
+    createdBy: {
+        type: CreatorSubSchema,
+        required: true
+    }
 });
+
+export const DBShortenedUrlModel = mongoose.model<DBShortenedUrl>('shortened-urls', DBShortenedUrlSchema);

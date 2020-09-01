@@ -1,5 +1,6 @@
 export type WebserverConfig = {
     port: number,
+    trustProxy: boolean;
     fallback: string,
     graphql: {
         url: string,
@@ -10,6 +11,7 @@ export type WebserverConfig = {
 
 export const DefaultWebserverConfig: WebserverConfig = {
     port: 80,
+    trustProxy: true,
     fallback: "https://twasi.net",
     graphql: {
         mock: false,

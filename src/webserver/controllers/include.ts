@@ -3,6 +3,7 @@ import {Router} from "express";
 import {DefinitionNode, Location} from "graphql/language/ast";
 import {RedirectionController} from "./rest/RedirectionController";
 import {RootTypeController} from "./graphql/root-type.controller";
+import {PublicUrlCreationController} from "./graphql/public-url-creation.controller";
 
 export type DocumentNode = {
     readonly kind: 'Document';
@@ -13,4 +14,7 @@ export type RestController = { url: string, router: Router };
 export type GraphQLController = { typeDefs: Array<DocumentNode>, resolvers: Array<IResolvers> }
 
 export const RestControllers: Array<RestController> = [RedirectionController];
-export const GraphQLControllers: Array<GraphQLController> = [RootTypeController];
+export const GraphQLControllers: Array<GraphQLController> = [
+    RootTypeController,
+    PublicUrlCreationController
+];

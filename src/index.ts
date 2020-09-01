@@ -1,3 +1,9 @@
-import {WebServer} from "./webserver/webserver";
+import {connectDatabase} from "./database/database";
+import {startWebServer} from "./webserver/webserver";
 
-WebServer.on('listen', console.log);
+connectDatabase().then(() => console.log('Database connected.')).catch(e => {
+    console.log('Could not connect database.')
+    console.error(e);
+});
+
+startWebServer();

@@ -9,7 +9,7 @@ export enum ShortenedUrlCreatorType {
 export interface ShortenedUrlModel {
     short: string,
     tag: string,
-    created: Date,
+    created?: Date,
     redirection: string,
     createdBy: {
         type: ShortenedUrlCreatorType,
