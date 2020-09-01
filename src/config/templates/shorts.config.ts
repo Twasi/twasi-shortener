@@ -7,5 +7,5 @@ export type ShortsConfig = {
 export const DefaultShortsConfig: ShortsConfig = {
     mappings: [],
     panel: "c",
-    public: "p"
+    public: "r"
 };

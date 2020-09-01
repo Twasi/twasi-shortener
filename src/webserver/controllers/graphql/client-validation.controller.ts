@@ -1,5 +1,5 @@
 import {GraphQLController} from "../include";
-import { gql } from "apollo-server-express";
+import {gql} from "apollo-server-express";
 import {RedirectsConfig, TagsConfig} from "../../../config/app-config";
 
 export const ClientValidationController: GraphQLController = {
@@ -18,12 +18,14 @@ export const ClientValidationController: GraphQLController = {
     ],
     resolvers: [{
         Query: {
-            clientValidation: {
-                validateRedirectUrl: () => {
-                    return RedirectsConfig.allowedUrls;
-                },
-                validateTag: () => {
-                    return TagsConfig.allowedChars
+            clientValidation: () => {
+                return {
+                    validateRedirectUrl: () => {
+                        return RedirectsConfig.allowedUrls;
+                    },
+                    validateTag: () => {
+                        return TagsConfig.allowedChars
+                    }
                 }
             }
         }
