@@ -1,5 +1,5 @@
 import * as mongoose from "mongoose";
-import {Schema, SchemaOptions} from "mongoose";
+import {Schema} from "mongoose";
 import {DBShortenedUrl, ShortenedUrlCreatorType} from "../../models/shortened-url.model";
 import {RedirectsConfig, TagsConfig} from "../../config/app-config";
 
@@ -28,7 +28,7 @@ export const DBShortenedUrlSchema = new Schema<DBShortenedUrl>({
         type: String,
         required: true,
         validate: {
-            validator: new RegExp(TagsConfig.allowedChars.regex, TagsConfig.allowedChars.flags),
+            validator: new RegExp(TagsConfig.allowedChars.regex, TagsConfig.allowedChars.flags).compile(),
             message: "Invalid characters in tag."
         }
     },
@@ -40,15 +40,8 @@ export const DBShortenedUrlSchema = new Schema<DBShortenedUrl>({
     redirection: {
         type: String,
         required: true,
-        set<T extends keyof SchemaOptions>(key: T): SchemaOptions[T] {
-            if (!key.toLowerCase().startsWith('http://') && !key.toLowerCase().startsWith('https://')) {
-                return 'http://' + key;
-            } else {
-                return key;
-            }
-        },
         validate: {
-            validator: new RegExp(RedirectsConfig.allowedUrls.regex, RedirectsConfig.allowedUrls.flags),
+            validator: new RegExp(RedirectsConfig.allowedUrls.regex, RedirectsConfig.allowedUrls.flags).compile(),
             message: 'The url is not valid.'
         }
     },
