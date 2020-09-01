@@ -30,6 +30,7 @@ const Apollo = new ApolloServer({
             ip: context.req.ip
         }
     },
+    debug: config.graphql.debug,
     typeDefs,
     resolvers
 });

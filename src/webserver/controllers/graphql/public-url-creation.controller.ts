@@ -2,11 +2,22 @@ import {gql} from "apollo-server-express";
 import {GraphQLController} from "../include";
 import {ApolloContext} from "../../webserver";
 import {DBShortenedUrlModel} from "../../../database/schemas/shortened-url.schema";
-import {ShortsConfig as config} from "../../../config/app-config";
+import {RestrictionsConfig, ShortsConfig as config} from "../../../config/app-config";
 import {ShortenedUrlCreatorType, ShortenedUrlModel} from "../../../models/shortened-url.model";
 
 const existsPublic = async (tag: string): Promise<boolean> => {
-    return DBShortenedUrlModel.exists({short: config.public, tag: tag.toLowerCase()});
+    return DBShortenedUrlModel.exists({short: config.public, tag});
+}
+
+const canCreate = async (ip: string): Promise<boolean> => {
+    const restriction = RestrictionsConfig.public;
+    const createdRecently = (await DBShortenedUrlModel.countDocuments(
+        {
+            "createdBy.type": ShortenedUrlCreatorType.PUBLIC,
+            "createdBy.ip": ip,
+            created: {$gt: new Date(Date.now() - restriction.periodInMs)}
+        }));
+    return createdRecently < restriction.maxUrls;
 }
 
 export const PublicUrlCreationController: GraphQLController = {
@@ -22,7 +33,8 @@ export const PublicUrlCreationController: GraphQLController = {
         {
             Mutation: {
                 createPublicUrl: async (source, args: { tag: string, url: string }, context: ApolloContext): Promise<ShortenedUrlModel | null> => {
-                    if (await existsPublic(args.tag)) return null;
+                    if (await existsPublic(args.tag)) throw new Error("That tag is already in use.");
+                    if (!(await canCreate(context.ip))) throw new Error("You are creating too many redirections. Please cool it down.")
                     const newRedirection: ShortenedUrlModel = {
                         short: config.public,
                         tag: args.tag,

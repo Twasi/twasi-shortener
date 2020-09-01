@@ -5,7 +5,8 @@ export type WebserverConfig = {
     graphql: {
         url: string,
         playground: boolean,
-        mock: boolean
+        mock: boolean,
+        debug: boolean
     }
 }
 
@@ -16,6 +17,7 @@ export const DefaultWebserverConfig: WebserverConfig = {
     graphql: {
         mock: false,
         playground: false,
-        url: "/gql"
+        url: "/gql",
+        debug: false
     }
 }
