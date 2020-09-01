@@ -1,0 +1,21 @@
+version: '2'
+services:
+  app:
+    build: .
+    container_name: "twasi-redirector"
+    image: debian/latest
+    ports:
+      - 80:80
+    links:
+      - db
+    depends_on:
+      - db
+  db:
+    image: mongo:latest
+    container_name: "mongodb"
+    environment:
+      - MONGO_DATA_DIR=/data/db
+      - MONGO_LOG_DIR=/dev/null
+    volumes:
+      - ./data/db:/data/db
+    command: mongod --smallfiles --logpath=/dev/null # --quiet
