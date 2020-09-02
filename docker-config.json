@@ -1,60 +1,8 @@
 {
   "WEBSERVER": {
-    "port": 80,
-    "trustProxy": true,
-    "fallback": "https://twasi.net",
-    "graphql": {
-      "mock": false,
-      "playground": false,
-      "url": "/gql",
-      "debug": false
-    }
+    "trustProxy": true
   },
   "DATABASE": {
-    "host": "db",
-    "port": 27017,
-    "username": "",
-    "password": ""
-  },
-  "RESTRICTIONS": {
-    "partners": {
-      "periodInMs": 60000,
-      "maxUrls": 10
-    },
-    "public": {
-      "periodInMs": 300000,
-      "maxUrls": 10
-    },
-    "users": {
-      "periodInMs": 180000,
-      "maxUrls": 10
-    }
-  },
-  "URLS": {
-    "TAGS": {
-      "allowedChars": {
-        "regex": "(?=((^[a-z0-9äöü]+[-?!._0-9a-zäöü]*[a-z0-9äöü]+$)|(^[a-z0-9äöü]+$)))(?!.*([-?!._]{2,}))",
-        "flags": "gi"
-      },
-      "maxLength": 10
-    }
-  },
-  "REDIRECT-URLS": {
-    "allowedUrls": {
-      "regex": "^(http:\\/\\/www\\.|https:\\/\\/www\\.|http:\\/\\/|https:\\/\\/)?[a-z0-9]+([\\-\\.]{1}[a-z0-9]+)*\\.[a-z]{2,5}(:[0-9]{1,5})?(\\/.*)?$",
-      "flags": "gi"
-    }
-  },
-  "URL-SHORTS": {
-    "mappings": [],
-    "panel": "c",
-    "public": "r"
-  },
-  "URL-TAGS": {
-    "allowedChars": {
-      "regex": "(?=((^[a-z0-9äöü]+[-?!._0-9a-zäöü]*[a-z0-9äöü]+$)|(^[a-z0-9äöü]+$)))(?!.*([-?!._]{2,}))",
-      "flags": "gi"
-    },
-    "maxLength": 10
+    "host": "db"
   }
 }
