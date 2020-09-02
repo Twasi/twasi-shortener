@@ -4,8 +4,5 @@ COPY package*.json ./
 COPY . .
 COPY docker-config.json ./config.json
 EXPOSE 80
-RUN yarn && yarn run build
-WORKDIR /usr/src/app/frontend
-RUN yarn && yarn run build
-WORKDIR /usr/src/app
+RUN yarn && yarn run build && yarn run build:frontend
 CMD [ "node", "." ]
