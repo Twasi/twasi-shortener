@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "ts-node src/index.ts",
     "build": "tsc",
-    "build:frontend": "cd frontend && npm run build"
+    "create-deployment-build": "ts-node build.ts"
   },
   "keywords": [],
   "author": "",
@@ -25,7 +25,6 @@
     "merlins-argument-parser": "^1.0.0",
     "merlins-config-manager": "^1.0.0",
     "mongoose": "^5.10.2",
-    "random-words": "^1.1.1",
-    "twasi-url-shortener": "file:frontend"
+    "random-words": "^1.1.1"
   }
 }
