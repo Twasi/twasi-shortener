@@ -49,6 +49,11 @@ export const DBShortenedUrlSchema = new Schema<DBShortenedUrl>({
     createdBy: {
         type: CreatorSubSchema,
         required: true
+    },
+    hits: {
+        type: Number,
+        required: true,
+        default: 0
     }
 });
 

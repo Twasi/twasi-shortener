@@ -4,7 +4,11 @@ import {DBShortenedUrlModel} from "../../../database/schemas/shortened-url.schem
 
 async function findRedirection(short: string, tag: string): Promise<string | null> {
     const result = await DBShortenedUrlModel.findOne({short, tag});
-    if (result) return result.redirection;
+    if (result) {
+        typeof result.hits === "number" ? result.hits++ : result.hits = 0;
+        result.save();
+        return result.redirection;
+    }
     return null;
 }
 
