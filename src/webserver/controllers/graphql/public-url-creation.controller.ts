@@ -2,14 +2,15 @@ import {gql} from "apollo-server-express";
 import {GraphQLController} from "../include";
 import {ApolloContext} from "../../webserver";
 import {DBShortenedUrlModel} from "../../../database/schemas/shortened-url.schema";
-import {RestrictionsConfig, ShortsConfig as config} from "../../../config/app-config";
-import {ShortenedUrlCreatorType, ShortenedUrlModel} from "../../../models/shortened-url.model";
+import {RestrictionsConfig, ShortsConfig, ShortsConfig as config, TagsConfig} from "../../../config/app-config";
+import {DBShortenedUrl, ShortenedUrlCreatorType, ShortenedUrlModel} from "../../../models/shortened-url.model";
+import {createRandomTag} from "../../../helpers/RandomTagGenerator";
 
-const existsPublic = async (tag: string): Promise<boolean> => {
+export const tagExistsPublic = async (tag: string): Promise<boolean> => {
     return DBShortenedUrlModel.exists({short: config.public, tag});
 }
 
-const canCreate = async (ip: string): Promise<boolean> => {
+export const ipCanCreatePublic = async (ip: string): Promise<boolean> => {
     const restriction = RestrictionsConfig.public;
     const createdRecently = (await DBShortenedUrlModel.countDocuments(
         {
@@ -20,10 +21,37 @@ const canCreate = async (ip: string): Promise<boolean> => {
     return createdRecently < restriction.maxUrls;
 }
 
+export const createPublic = async (url: string, ip: string, tag: string | null = null): Promise<DBShortenedUrl> => {
+    if (!tag) {
+        do {
+            tag = createRandomTag();
+            if (tag.length > TagsConfig.maxLength) tag = tag.substr(0, TagsConfig.maxLength);
+        } while (await DBShortenedUrlModel.exists({short: ShortsConfig.public, tag}));
+    }
+
+    // Create new redirection
+    const newRedirection: ShortenedUrlModel = {
+        short: config.public,
+        tag,
+        redirection: url,
+        createdBy: {
+            type: ShortenedUrlCreatorType.PUBLIC,
+            ip
+        }
+    };
+    const dbNewRedirection = new DBShortenedUrlModel(newRedirection);
+
+    // Validate new redirection
+    await dbNewRedirection.validate();
+
+    // Save new redirection
+    return dbNewRedirection.save();
+}
+
 export const PublicUrlCreationController: GraphQLController = {
     typeDefs: [
         gql`extend type Mutation {
-            createPublicUrl(tag: String!, url: String!): ShortenedUrl,
+            createPublicUrl(tag: String, url: String!): ShortenedUrl,
         }`,
         gql`extend type Query {
             existsPublic(tag: String!): Boolean!
@@ -33,27 +61,19 @@ export const PublicUrlCreationController: GraphQLController = {
         {
             Mutation: {
                 createPublicUrl: async (source, args: { tag: string, url: string }, context: ApolloContext): Promise<ShortenedUrlModel | null> => {
-                    if (await existsPublic(args.tag)) throw new Error("That tag is already in use.");
-                    if (!(await canCreate(context.ip))) throw new Error("You are creating too many redirections. Please cool it down.")
-                    const newRedirection: ShortenedUrlModel = {
-                        short: config.public,
-                        tag: args.tag,
-                        redirection: args.url,
-                        createdBy: {
-                            type: ShortenedUrlCreatorType.PUBLIC,
-                            ip: context.ip
-                        }
-                    };
-                    const dbNewRedirection = new DBShortenedUrlModel(newRedirection);
-                    await dbNewRedirection.validate();
-                    const result = dbNewRedirection.save();
+                    // Check if tag already exists and if user has reached his public limit
+                    if (await tagExistsPublic(args.tag)) throw new Error("That tag is already in use.");
+                    if (!(await ipCanCreatePublic(context.ip))) throw new Error("You are creating too many redirections. Please cool it down.")
+
+                    const result = createPublic(args.url, context.ip, args.tag);
+
                     if (result) return result;
                     else return null;
                 }
             },
             Query: {
                 existsPublic: async (source, args: { tag: string }): Promise<boolean> => {
-                    return existsPublic(args.tag);
+                    return tagExistsPublic(args.tag);
                 }
             }
         }

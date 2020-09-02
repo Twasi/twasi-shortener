@@ -13,7 +13,7 @@ export type WebserverConfig = {
 export const DefaultWebserverConfig: WebserverConfig = {
     port: 80,
     trustProxy: false,
-    fallback: "https://twasi.net",
+    fallback: "/?404",
     graphql: {
         mock: false,
         playground: false,

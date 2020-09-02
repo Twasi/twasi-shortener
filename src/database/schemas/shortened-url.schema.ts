@@ -26,6 +26,7 @@ export const DBShortenedUrlSchema = new Schema<DBShortenedUrl>({
     },
     tag: {
         type: String,
+        maxlength: TagsConfig.maxLength,
         required: true,
         validate: {
             validator: new RegExp(TagsConfig.allowedChars.regex, TagsConfig.allowedChars.flags).compile(),

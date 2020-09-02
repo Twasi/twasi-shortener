@@ -37,7 +37,7 @@ Apollo.applyMiddleware({app: App, path: config.graphql.url});
 
 RestControllers.forEach(ctrl => App.use(ctrl.url, ctrl.router));
 
-App.use('/*', (req, res) => res.redirect(config.fallback))
+App.use('*', (req, res) => res.redirect(config.fallback));
 
 export const WebServer = App;
 export const startWebServer = () => App.listen(config.port);
