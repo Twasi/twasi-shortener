@@ -9,11 +9,10 @@ async function findRedirection(short: string, tag: string): Promise<string | nul
 }
 
 const router = Router();
-router.get('/:short/:tag', async (req, res, next) => {
+router.get('/:short/:tag', async (req, res) => {
     const redirection = await findRedirection(req.params.short, req.params.tag);
-    if (redirection)
-        res.redirect(redirection);
-    else next();
+    if (redirection) res.redirect(redirection);
+    else res.redirect('/?404');
 });
 
 export const RedirectionController: RestController = {router, url: "/"};

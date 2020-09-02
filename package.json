@@ -5,11 +5,12 @@
   "main": "dist/index.js",
   "scripts": {
     "dev": "ts-node src/index.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "build:frontend": "cd frontend && npm run build"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@types/express": "^4.17.7",
     "@types/mongoose": "^5.7.36",
@@ -23,6 +24,7 @@
     "express": "^4.17.1",
     "merlins-argument-parser": "^1.0.0",
     "merlins-config-manager": "^1.0.0",
-    "mongoose": "^5.10.2"
+    "mongoose": "^5.10.2",
+    "twasi-url-shortener": "file:frontend"
   }
 }

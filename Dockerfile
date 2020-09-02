@@ -6,4 +6,5 @@ COPY . .
 COPY docker-config.json ./config.json
 EXPOSE 80
 RUN npm run build
+RUN npm run build:frontend
 CMD [ "node", "." ]

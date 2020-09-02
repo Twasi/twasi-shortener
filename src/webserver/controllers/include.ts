@@ -5,6 +5,7 @@ import {RedirectionController} from "./rest/RedirectionController";
 import {RootTypeController} from "./graphql/root-type.controller";
 import {PublicUrlCreationController} from "./graphql/public-url-creation.controller";
 import {ClientValidationController} from "./graphql/client-validation.controller";
+import {FrontendController} from "./rest/FrontendController";
 
 export type DocumentNode = {
     readonly kind: 'Document';
@@ -16,6 +17,7 @@ export type GraphQLController = { typeDefs: Array<DocumentNode>, resolvers: Arra
 
 export const RestControllers: Array<RestController> = [
     RedirectionController,
+    FrontendController
 ];
 export const GraphQLControllers: Array<GraphQLController> = [
     RootTypeController,

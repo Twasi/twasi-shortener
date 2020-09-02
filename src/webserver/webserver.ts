@@ -6,8 +6,6 @@ import {WebserverConfig as config} from "../config/app-config";
 const App = express();
 App.set('trust proxy', config.trustProxy);
 
-RestControllers.forEach(ctrl => App.use(ctrl.url, ctrl.router));
-
 const typeDefs: Array<DocumentNode> = [];
 const resolvers: Array<IResolvers> = [];
 GraphQLControllers.forEach(x => {
@@ -36,6 +34,8 @@ const Apollo = new ApolloServer({
 });
 
 Apollo.applyMiddleware({app: App, path: config.graphql.url});
+
+RestControllers.forEach(ctrl => App.use(ctrl.url, ctrl.router));
 
 App.use('/*', (req, res) => res.redirect(config.fallback))
 

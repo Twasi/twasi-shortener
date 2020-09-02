@@ -3,7 +3,7 @@ A simple URL shortener written in TypeScript created for [twa.si](https://twa.si
 
 ## Deployment
 **Local:**
-1. Clone the repo.
+1. Clone the repo **with submodules** ("*git clone --recursive https://github.com/twasi/twasi-shortener.git*").
 2. Run "*npm install*".
 3. Run "*npm build*".
 
