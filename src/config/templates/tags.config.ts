@@ -11,5 +11,5 @@ export const DefaultTagsConfig: TagsConfig = {
         regex: new RegExp(/(?=((^[a-z0-9äöü]+[-?!._0-9a-zäöü]*[a-z0-9äöü]+$)|(^[a-z0-9äöü]+$)))(?!.*([-?!._]{2,}))/).source,
         flags: "gi"
     },
-    maxLength: 10
+    maxLength: 30
 }
