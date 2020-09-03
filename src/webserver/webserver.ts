@@ -1,5 +1,5 @@
 import express from 'express';
-import {ApolloServer, IResolvers} from "apollo-server-express";
+import {ApolloServer, IResolvers, makeExecutableSchema} from "apollo-server-express";
 import {DocumentNode, GraphQLControllers, RestControllers} from "./controllers/include";
 import {WebserverConfig as config} from "../config/app-config";
 
@@ -18,7 +18,9 @@ export type ApolloContext = {
     authorization?: string
 }
 
-const Apollo = new ApolloServer({
+export const schema = makeExecutableSchema({typeDefs, resolvers});
+
+export const Apollo = new ApolloServer({
     mocks: config.graphql.mock,
     mockEntireSchema: config.graphql.mock,
     playground: config.graphql.playground,
@@ -29,8 +31,10 @@ const Apollo = new ApolloServer({
         }
     },
     debug: config.graphql.debug,
-    typeDefs,
-    resolvers
+    subscriptions: {
+        path: config.graphql.wsUrl
+    },
+    schema
 });
 
 Apollo.applyMiddleware({app: App, path: config.graphql.url});

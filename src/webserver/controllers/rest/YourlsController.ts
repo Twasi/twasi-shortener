@@ -1,7 +1,7 @@
 import {RestController} from "../include";
 import {Router, text} from "express";
 import {YourlsRequestModel} from "../../../models/yourls/yourls-request.model";
-import {createPublic, ipCanCreatePublic} from "../graphql/public-url-creation.controller";
+import {createPublic, ipCanCreatePublic} from "../graphql/public/public-url-creation.controller";
 
 const router = Router();
 router.use(text());

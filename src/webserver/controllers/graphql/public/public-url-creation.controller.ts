@@ -1,10 +1,11 @@
 import {gql} from "apollo-server-express";
-import {GraphQLController} from "../include";
-import {ApolloContext} from "../../webserver";
-import {DBShortenedUrlModel} from "../../../database/schemas/shortened-url.schema";
-import {RestrictionsConfig, ShortsConfig, ShortsConfig as config, TagsConfig} from "../../../config/app-config";
-import {DBShortenedUrl, ShortenedUrlCreatorType, ShortenedUrlModel} from "../../../models/shortened-url.model";
-import {createRandomTag} from "../../../helpers/RandomTagGenerator";
+import {GraphQLController} from "../../include";
+import {ApolloContext} from "../../../webserver";
+import {DBShortenedUrlModel} from "../../../../database/schemas/shortened-url.schema";
+import {RestrictionsConfig, ShortsConfig, ShortsConfig as config, TagsConfig} from "../../../../config/app-config";
+import {DBShortenedUrl, ShortenedUrlCreatorType, ShortenedUrlModel} from "../../../../models/shortened-url.model";
+import {createRandomTag} from "../../../../helpers/RandomTagGenerator";
+import {publishPublicUrlCount} from "./public-stats.controller";
 
 export const tagExistsPublic = async (tag: string): Promise<boolean> => {
     return DBShortenedUrlModel.exists({short: config.public, tag});
@@ -44,6 +45,9 @@ export const createPublic = async (url: string, ip: string, tag: string | null =
     // Validate new redirection
     await dbNewRedirection.validate();
 
+    // Trigger subscription
+    publishPublicUrlCount(dbNewRedirection.urlNumber as number).then();
+
     // Save new redirection
     return dbNewRedirection.save();
 }
@@ -60,7 +64,7 @@ export const PublicUrlCreationController: GraphQLController = {
     resolvers: [
         {
             Mutation: {
-                createPublicUrl: async (source, args: { tag: string, url: string }, context: ApolloContext): Promise<ShortenedUrlModel | null> => {
+                async createPublicUrl(source, args: { tag: string, url: string }, context: ApolloContext): Promise<ShortenedUrlModel | null> {
                     // Check if tag already exists and if user has reached his public limit
                     if (await tagExistsPublic(args.tag)) throw new Error("That tag is already in use.");
                     if (!(await ipCanCreatePublic(context.ip))) throw new Error("You are creating too many redirections. Please cool it down.")
@@ -72,7 +76,7 @@ export const PublicUrlCreationController: GraphQLController = {
                 }
             },
             Query: {
-                existsPublic: async (source, args: { tag: string }): Promise<boolean> => {
+                async existsPublic(source, args: { tag: string }): Promise<boolean> {
                     return tagExistsPublic(args.tag);
                 }
             }

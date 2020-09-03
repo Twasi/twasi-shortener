@@ -16,7 +16,8 @@ export interface ShortenedUrlModel {
         id?: string,
         ip?: string
     },
-    hits?: number
+    hits?: number,
+    urlNumber?: number
 }
 
 export interface DBShortenedUrl extends ShortenedUrlModel, Document {

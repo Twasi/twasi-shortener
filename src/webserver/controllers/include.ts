@@ -3,10 +3,11 @@ import {Router} from "express";
 import {DefinitionNode, Location} from "graphql/language/ast";
 import {RedirectionController} from "./rest/RedirectionController";
 import {RootTypeController} from "./graphql/root-type.controller";
-import {PublicUrlCreationController} from "./graphql/public-url-creation.controller";
+import {PublicUrlCreationController} from "./graphql/public/public-url-creation.controller";
 import {ClientValidationController} from "./graphql/client-validation.controller";
 import {FrontendController} from "./rest/FrontendController";
 import {YourlsController} from "./rest/YourlsController";
+import {PublicStatsController} from "./graphql/public/public-stats.controller";
 
 export type DocumentNode = {
     readonly kind: 'Document';
@@ -25,4 +26,5 @@ export const GraphQLControllers: Array<GraphQLController> = [
     RootTypeController,
     PublicUrlCreationController,
     ClientValidationController,
+    PublicStatsController
 ];

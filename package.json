@@ -25,6 +25,7 @@
     "merlins-argument-parser": "^1.0.0",
     "merlins-config-manager": "^1.0.0",
     "mongoose": "^5.10.2",
-    "random-words": "^1.1.1"
+    "random-words": "^1.1.1",
+    "subscriptions-transport-ws": "^0.9.18"
   }
 }

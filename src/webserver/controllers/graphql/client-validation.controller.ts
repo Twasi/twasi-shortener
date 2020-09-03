@@ -18,12 +18,12 @@ export const ClientValidationController: GraphQLController = {
     ],
     resolvers: [{
         Query: {
-            clientValidation: () => {
+            clientValidation() {
                 return {
-                    validateRedirectUrl: () => {
+                    validateRedirectUrl() {
                         return RedirectsConfig.allowedUrls;
                     },
-                    validateTag: () => {
+                    validateTag() {
                         return TagsConfig.allowedChars
                     }
                 }

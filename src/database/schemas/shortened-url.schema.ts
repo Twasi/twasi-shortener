@@ -1,5 +1,5 @@
 import * as mongoose from "mongoose";
-import {Schema} from "mongoose";
+import {Model, Schema} from "mongoose";
 import {DBShortenedUrl, ShortenedUrlCreatorType} from "../../models/shortened-url.model";
 import {RedirectsConfig, TagsConfig} from "../../config/app-config";
 
@@ -29,7 +29,9 @@ export const DBShortenedUrlSchema = new Schema<DBShortenedUrl>({
         maxlength: TagsConfig.maxLength,
         required: true,
         validate: {
-            validator: new RegExp(TagsConfig.allowedChars.regex, TagsConfig.allowedChars.flags),
+            validator: (value: string) => {
+                return new RegExp(TagsConfig.allowedChars.regex, TagsConfig.allowedChars.flags).test(value);
+            },
             message: "Invalid characters in tag."
         }
     },
@@ -42,7 +44,9 @@ export const DBShortenedUrlSchema = new Schema<DBShortenedUrl>({
         type: String,
         required: true,
         validate: {
-            validator: new RegExp(RedirectsConfig.allowedUrls.regex, RedirectsConfig.allowedUrls.flags),
+            validator: (value: string) => {
+                return new RegExp(RedirectsConfig.allowedUrls.regex, RedirectsConfig.allowedUrls.flags).test(value);
+            },
             message: 'The url is not valid.'
         }
     },
@@ -56,5 +60,9 @@ export const DBShortenedUrlSchema = new Schema<DBShortenedUrl>({
         default: 0
     }
 });
+DBShortenedUrlSchema.virtual('urlNumber').get(async function () {
+    // @ts-ignore
+    return DBShortenedUrlModel.countDocuments({created: {$lte: this.created}});
+})
 
-export const DBShortenedUrlModel = mongoose.model<DBShortenedUrl>('shortened-urls', DBShortenedUrlSchema);
+export const DBShortenedUrlModel: Model<DBShortenedUrl> = mongoose.model<DBShortenedUrl>('shortened-urls', DBShortenedUrlSchema);

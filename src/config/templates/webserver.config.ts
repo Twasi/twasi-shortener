@@ -6,6 +6,7 @@ export type WebserverConfig = {
         url: string,
         playground: boolean,
         mock: boolean,
+        wsUrl: string,
         debug: boolean
     }
 }
@@ -18,6 +19,7 @@ export const DefaultWebserverConfig: WebserverConfig = {
         mock: false,
         playground: false,
         url: "/gql",
+        wsUrl: "/ws",
         debug: false
     }
 }
