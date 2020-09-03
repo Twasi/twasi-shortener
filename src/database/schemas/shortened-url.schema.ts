@@ -29,7 +29,7 @@ export const DBShortenedUrlSchema = new Schema<DBShortenedUrl>({
         maxlength: TagsConfig.maxLength,
         required: true,
         validate: {
-            validator: new RegExp(TagsConfig.allowedChars.regex, TagsConfig.allowedChars.flags).compile(),
+            validator: new RegExp(TagsConfig.allowedChars.regex, TagsConfig.allowedChars.flags),
             message: "Invalid characters in tag."
         }
     },
@@ -42,7 +42,7 @@ export const DBShortenedUrlSchema = new Schema<DBShortenedUrl>({
         type: String,
         required: true,
         validate: {
-            validator: new RegExp(RedirectsConfig.allowedUrls.regex, RedirectsConfig.allowedUrls.flags).compile(),
+            validator: new RegExp(RedirectsConfig.allowedUrls.regex, RedirectsConfig.allowedUrls.flags),
             message: 'The url is not valid.'
         }
     },
