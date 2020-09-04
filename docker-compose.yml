@@ -3,7 +3,7 @@ services:
   app:
     build: .
     container_name: "twasi-redirector"
-    image: debian/latest
+    image: twasi/twasi-shortener
     links:
       - db
     depends_on:
