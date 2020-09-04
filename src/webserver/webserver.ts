@@ -44,8 +44,6 @@ export const Apollo = new ApolloServer({
 
 const server = createServer(App);
 
-new SubscriptionServer({schema, subscribe, execute}, {path: config.graphql.wsUrl, server});
-Apollo.installSubscriptionHandlers(server);
 Apollo.applyMiddleware({app: App, path: config.graphql.url});
 
 RestControllers.forEach(ctrl => App.use(ctrl.url, ctrl.router));
@@ -53,4 +51,6 @@ RestControllers.forEach(ctrl => App.use(ctrl.url, ctrl.router));
 App.use('*', (req, res) => res.redirect(config.fallback));
 
 export const WebServer = App;
-export const startWebServer = () => server.listen(config.port);
+export const startWebServer = () => server.listen(config.port, () => {
+    new SubscriptionServer({schema, subscribe, execute}, {path: config.graphql.wsUrl, server});
+});

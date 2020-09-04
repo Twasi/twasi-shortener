@@ -6,8 +6,8 @@ import {ShortsConfig} from "../../../../config/app-config";
 const pubsub = new PubSub();
 const URL_CREATED = 'URL_CREATED';
 
-export const publishPublicUrlCount = async (count: number) => {
-    return pubsub.publish(URL_CREATED, {urlsCreated: count});
+export const publishPublicUrlCount = async (urlsCreated: number) => {
+    return pubsub.publish(URL_CREATED, {publicStats: {urlsCreated}});
 }
 
 export const PublicStatsController: GraphQLController = {
@@ -67,14 +67,8 @@ export const PublicStatsController: GraphQLController = {
             }
         },
         Subscription: {
-            publicStats() {
-                return {
-                    urlsCreated() {
-                        return {
-                            subscription: () => pubsub.asyncIterator([URL_CREATED])
-                        }
-                    }
-                }
+            publicStats: {
+                subscribe: () => pubsub.asyncIterator([URL_CREATED])
             }
         }
     }]
