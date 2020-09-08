@@ -1,3 +1,6 @@
 [submodule "frontend"]
 	path = frontend
 	url = https://github.com/twasi/twasi-shortener-frontend.git
+[submodule "chrome-extension"]
+	path = chrome-extension
+	url = https://github.com/twasi/twasi-shortener-chrome-extension.git
