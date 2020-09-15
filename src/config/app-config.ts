@@ -5,8 +5,9 @@ import {DefaultDatabaseConfig} from "./templates/database.config";
 import {DefaultTagsConfig} from "./templates/tags.config";
 import {DefaultRedirectUrlsConfig} from "./templates/redirect-urls.config";
 import {DefaultRestrictionsConfig} from "./templates/restrictions.config";
+import {DefaultTwitchConfig} from "./templates/twitch.config";
 
-export const AppConfig = new ConfigManager();
+const AppConfig = new ConfigManager();
 
 export const WebserverConfig = AppConfig.configSection('WEBSERVER', DefaultWebserverConfig);
 export const DatabaseConfig = AppConfig.configSection('DATABASE', DefaultDatabaseConfig);
@@ -14,3 +15,4 @@ export const RestrictionsConfig = AppConfig.configSection('RESTRICTIONS', Defaul
 export const RedirectsConfig = AppConfig.configSection('REDIRECT-URLS', DefaultRedirectUrlsConfig);
 export const ShortsConfig = AppConfig.configSection('URL-SHORTS', DefaultShortsConfig);
 export const TagsConfig = AppConfig.configSection('URL-TAGS', DefaultTagsConfig);
+export const TwitchConfig = AppConfig.configSection('TWITCH', DefaultTwitchConfig);

@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Redirecting...</title>
+</head>
+<body>
+<script>
+    const jwt = new URLSearchParams(window.location.search).get('jwt');
+    if (jwt) localStorage.setItem('JWT', jwt);
+    window.open('/', '_self');
+</script>
+</body>
+</html>
