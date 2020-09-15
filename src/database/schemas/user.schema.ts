@@ -65,11 +65,10 @@ const UserSchema = new Schema<UserModel>({
 
 UserSchema.virtual('makeJwt').get(function (this: DBUser) {
     const data = this.twitchAccount;
-    const twitchAccount: TwitchAccountModel = {
+    const twitchAccount: Partial<TwitchAccountModel> = {
         avatar: data.avatar,
         displayName: data.displayName,
         email: data.email,
-        token: {accessToken: data.token.accessToken, refreshToken: data.token.refreshToken},
         twitchId: data.twitchId,
         userName: data.userName
     };
