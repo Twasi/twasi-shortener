@@ -1,6 +1,6 @@
 import {DBUser, UserRank} from "../../models/user.model";
 import {DBShortenedUrl, ShortenedUrlCreatorType, ShortenedUrlModel} from "../../models/shortened-url.model";
-import {createRandomTag} from "../../helpers/RandomTagGenerator";
+import {createRandomTag} from "../random-tag-generator.routines";
 import {ShortsConfig, TagsConfig} from "../../config/app-config";
 import {DBShortenedUrlModel} from "../../database/schemas/shortened-url.schema";
 import {publishPublicUrlCount} from "../../webserver/controllers/graphql/public/public-stats.controller";
