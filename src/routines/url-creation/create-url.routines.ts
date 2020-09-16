@@ -4,8 +4,8 @@ import {createRandomTag} from "../random-tag-generator.routines";
 import {ShortsConfig, TagsConfig} from "../../config/app-config";
 import {DBShortenedUrlModel} from "../../database/schemas/shortened-url.schema";
 import {publishPublicUrlCount} from "../../webserver/controllers/graphql/public/public-stats.controller";
-import {ipCanCreatePublic, tagExists} from "../url-creation.routines";
-import {userCanCreate} from "./url-creation-permission-checks.routines";
+import {canIpCreatePublicUrl, tagExists} from "../url-creation.routines";
+import {canUserCreateUrl} from "./url-creation-permission-checks.routines";
 
 export const createUrl = async (
     short: string,
@@ -22,7 +22,7 @@ export const createUrl = async (
     } else if (await tagExists(short, tag))
         throw new Error("That tag is already in use.");
 
-    if ((user && !await userCanCreate(user, short)) || (ip && !await ipCanCreatePublic(ip)))
+    if ((user && !await canUserCreateUrl(user, short)) || (ip && !await canIpCreatePublicUrl(ip)))
         throw new Error("You are creating too many redirections. Please cool it down.");
 
     // Create new redirection
