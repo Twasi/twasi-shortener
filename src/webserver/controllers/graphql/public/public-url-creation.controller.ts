@@ -7,7 +7,7 @@ import {createPublicUrl, tagExistsPublic} from "../../../../routines/url-creatio
 export const PublicUrlCreationController: GraphQLController = {
     typeDefs: [
         gql`extend type Mutation {
-            createPublicUrl(tag: String, url: String!): ShortenedUrl,
+            createPublicUrl(tag: String, redirection: String!): ShortenedUrl,
         }`,
         gql`extend type Query {
             existsPublic(tag: String!): Boolean!
@@ -16,8 +16,8 @@ export const PublicUrlCreationController: GraphQLController = {
     resolvers: [
         {
             Mutation: {
-                async createPublicUrl(source, args: { tag: string, url: string }, context: ApolloContext): Promise<ShortenedUrlModel | null> {
-                    return await createPublicUrl(args.url, context.ip, args.tag);
+                async createPublicUrl(source, args: { tag: string, redirection: string }, context: ApolloContext): Promise<ShortenedUrlModel | null> {
+                    return await createPublicUrl(args.redirection, context.ip, args.tag);
                 }
             },
             Query: {
