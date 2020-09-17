@@ -18,12 +18,12 @@ export const UrlQueryController: GraphQLController = {
     resolvers: [
         {
             Query: {
-                myUrls: (source, args, context, info) => {
+                myUrls: (source, args: { pageSize?: number, page?: number }, context) => {
                     // Check authorization
                     if (!context.authorization)
                         throw new Error("Unauthenticated.");
 
-                    return paginationFrom(DBShortenedUrlModel.find({"createdBy.id": context.authorization._id}), args.page || 1, args.pageSize);
+                    return paginationFrom(DBShortenedUrlModel.find({"createdBy.id": context.authorization._id}), args);
                 }
             }
         }
