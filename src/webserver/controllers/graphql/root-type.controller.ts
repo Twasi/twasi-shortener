@@ -11,7 +11,7 @@ export const RootTypeController: GraphQLController = {
         gql`type Query { _root: String! }`,
         gql`type Mutation { _root: String! }`,
         gql`type Subscription { _root: String! }`,
-        gql`type UserData {
+        gql`type User {
             "The internal user id"
             _id: String!,
             "The Twitch username"
@@ -22,16 +22,8 @@ export const RootTypeController: GraphQLController = {
             twitchId: String!,
             "The Twitch avatar"
             avatar: String!
-        }`,
-        gql`type PrivateUserData {
             "The email that is set up on Twitch"
             email: String!
-        }`,
-        gql`type User {
-            "The public user data"
-            data: UserData!,
-            "The user data that can only be queried by admin's or the user itself"
-            privateData: PrivateUserData
         }`,
         gql`type ShortenedUrlCreator {
             "Either 'PUBLIC', 'USER' or 'TEAM'"

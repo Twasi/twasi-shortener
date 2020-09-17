@@ -12,6 +12,7 @@ import {TwitchAuthController} from "./rest/twitch-auth.controller";
 import {StaticController} from "./rest/static.controller";
 import {AuthenticatedUrlCreationController} from "./graphql/authenticated/authenticated-url-creation.controller";
 import {UrlQueryController} from "./graphql/authenticated/url-query.controller";
+import {GetMeController} from "./graphql/authenticated/get-me.controller";
 
 export type DocumentNode = {
     readonly kind: 'Document';
@@ -34,5 +35,6 @@ export const GraphQLControllers: Array<GraphQLController> = [
     AuthenticatedUrlCreationController,
     ClientValidationController,
     PublicStatsController,
-    UrlQueryController
+    UrlQueryController,
+    GetMeController
 ];

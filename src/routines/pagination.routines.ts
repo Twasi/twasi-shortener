@@ -11,10 +11,5 @@ export const paginationFrom = async <T extends Document>(query: Query<Array<T>>,
     if (page > pages) page = pages;
     if (page < 1) page = 1;
 
-    return {
-        page,
-        pages,
-        total,
-        items: await query.setOptions({limit: pageSize, skip: pageSize * (page - 1)})
-    };
+    return {page, pages, total, items: await query.setOptions({limit: pageSize, skip: pageSize * (page - 1)})};
 }
