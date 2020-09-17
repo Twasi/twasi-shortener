@@ -23,7 +23,7 @@ export const UrlQueryController: GraphQLController = {
                     if (!context.authorization)
                         throw new Error("Unauthenticated.");
 
-                    return paginationFrom(DBShortenedUrlModel.find({"createdBy.id": context.authorization._id}), args.page || 1);
+                    return paginationFrom(DBShortenedUrlModel.find({"createdBy.id": context.authorization._id}), args.page || 1, args.pageSize);
                 }
             }
         }

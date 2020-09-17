@@ -7,7 +7,7 @@ export const paginationFrom = async <T extends Document>(query: Query<Array<T>>,
 
     const totalQuery = (query as unknown as { model: Model<T> }).model.find().merge(query);
     const total = await totalQuery.countDocuments();
-    const pages = Math.floor(total / pageSize) + 1;
+    const pages = Math.floor(total / pageSize);
     if (page > pages) page = pages;
     if (page < 1) page = 1;
 
