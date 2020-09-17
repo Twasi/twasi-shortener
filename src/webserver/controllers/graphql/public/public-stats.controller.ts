@@ -93,12 +93,12 @@ export const PublicStatsController: GraphQLController = {
                                 }]))[0].hits;
                                 return result;
                             },
-                            ofTag: async (source: any, {tag}: { tag: string }, context: ApolloContext) => {
+                            ofTag: async (args: { tag: string }, context: ApolloContext) => {
                                 if (shorts.length > 1)
                                     throw new Error("Please specify only one short when querying url-hits of tag.");
 
-                                const result = (await DBShortenedUrlModel.findOne({tag, short: shorts[0]}))?.hits;
-                                return result;
+                                const result = (await DBShortenedUrlModel.findOne({tag: args.tag, short: shorts[0]}));
+                                return result?.hits;
                             }
                         }
                     }
