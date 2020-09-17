@@ -45,7 +45,9 @@ export const RootTypeController: GraphQLController = {
             "The redirect-URL"
             redirection: String!,
             "Information about the creating user"
-            createdBy: ShortenedUrlCreator
+            createdBy: ShortenedUrlCreator,
+            "How often the URL was clicked"
+            hits: Int!
         }`,
         gql`interface Pagination {
             page: Int!,
