@@ -68,13 +68,13 @@ export const PublicStatsController: GraphQLController = {
                     }
                 }
             },
-            globalStats: (source, {shorts}: { shorts: Array<string> }, context: ApolloContext) => {
+            globalStats: async (source, {shorts}: { shorts: Array<string> }, context: ApolloContext) => {
                 if (!context.authorization && !shorts.every(x => [ShortsConfig.public, ShortsConfig.panel].includes(x)))
                     throw new Error("You can only query the public and user-short unauthenticated.");
 
                 if (context.authorization)
                     for (let short of shorts)
-                        if (!canUserUseShort(context.authorization, short))
+                        if (!await canUserUseShort(context.authorization, short))
                             throw new Error(`You have no permission for the '${short}'-short and therefore can not query stats for it.`);
 
                 return {

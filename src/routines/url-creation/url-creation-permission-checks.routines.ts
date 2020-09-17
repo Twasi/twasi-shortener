@@ -4,7 +4,7 @@ import {ShortenedUrlCreatorType} from "../../models/shortened-url.model";
 import {DBShortenedUrlModel} from "../../database/schemas/shortened-url.schema";
 
 export const canUserUseShort = async (user: DBUser, short: string): Promise<boolean> => {
-    return user.rank === UserRank.TEAM || short === ShortsConfig.panel; // TODO add mappings
+    return user.rank === UserRank.TEAM || [ShortsConfig.panel, ShortsConfig.public].includes(short); // TODO add mappings
 }
 
 export const canIpCreatePublicUrl = async (ip: string): Promise<boolean> => {
