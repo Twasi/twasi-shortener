@@ -1,6 +1,6 @@
 import {gql} from "apollo-server-express";
 import {GraphQLController} from "../../include";
-import {paginationFrom} from "../../../../routines/pagination.routines";
+import {paginationFrom} from "../../../../routines/pagination/pagination.routines";
 import {DBShortenedUrlModel} from "../../../../database/schemas/shortened-url.schema";
 
 export const UrlQueryController: GraphQLController = {

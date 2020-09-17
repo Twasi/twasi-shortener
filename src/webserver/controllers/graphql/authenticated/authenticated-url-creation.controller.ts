@@ -2,7 +2,8 @@ import {gql} from "apollo-server-express";
 import {GraphQLController} from "../../include";
 import {ApolloContext} from "../../../webserver";
 import {ShortsConfig} from "../../../../config/app-config";
-import {canUserUseShort, createUrl} from "../../../../routines/url-creation.routines";
+import {createUrl} from "../../../../routines/urls/create-url.routine";
+import {canUserUseShort} from "../../../../routines/urls/url-creation-permission-checks.routine";
 
 export const AuthenticatedUrlCreationController: GraphQLController = {
     typeDefs: [
@@ -24,7 +25,7 @@ export const AuthenticatedUrlCreationController: GraphQLController = {
                         throw new Error("Please use 'createPublicUrl' for this short.");
 
                     // Check if user can use short
-                    if (!(await canUserUseShort(context.authorization, args.short)))
+                    if (!await canUserUseShort(context.authorization, args.short))
                         throw new Error('Sorry, you cannot use this short.');
 
                     return await createUrl(args.short, args.redirection, {

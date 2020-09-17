@@ -3,7 +3,9 @@ import {GraphQLController} from "../../include";
 import {DBShortenedUrlModel} from "../../../../database/schemas/shortened-url.schema";
 import {ShortsConfig} from "../../../../config/app-config";
 import {ApolloContext} from "../../../webserver";
-import {canUserUseShort} from "../../../../routines/url-creation.routines";
+import {canUserUseShort} from "../../../../routines/urls/url-creation-permission-checks.routine";
+import {getTotalUrlHitsByShorts, getUrlHits} from "../../../../routines/stats/hit-stats.routine";
+import {getCreatedUrlAmountByShorts} from "../../../../routines/stats/url-count-stats.routine";
 
 const pubsub = new PubSub();
 const URL_CREATED = 'URL_CREATED';
@@ -41,33 +43,14 @@ export const PublicStatsController: GraphQLController = {
     ],
     resolvers: [{
         Query: {
-            publicStats() {
-                return {
-                    async urlsCreated() {
-                        return DBShortenedUrlModel.countDocuments({short: ShortsConfig.public});
-                    },
-                    urlHits: () => {
-                        return {
-                            async total() {
-                                (await DBShortenedUrlModel.aggregate([
-                                    {$match: {short: 'r'}},
-                                    {
-                                        $group: {
-                                            _id: null,
-                                            hits: {$sum: '$hits'}
-                                        }
-                                    }]))[0].hits;
-                            },
-                            async ofTag(args: { tag: string }) {
-                                return (await DBShortenedUrlModel.findOne({
-                                    tag: args.tag,
-                                    short: ShortsConfig.public
-                                }))?.hits;
-                            }
-                        }
-                    }
+            publicStats: () => ({
+                urlsCreated: () => DBShortenedUrlModel.countDocuments({short: ShortsConfig.public}),
+
+                urlHits: {
+                    total: () => getUrlHits(ShortsConfig.public),
+                    ofTag: ({tag}: { tag: string }) => getUrlHits(ShortsConfig.public, tag)
                 }
-            },
+            }),
             globalStats: async (source, {shorts}: { shorts: Array<string> }, context: ApolloContext) => {
                 if (!context.authorization && !shorts.every(x => [ShortsConfig.public, ShortsConfig.panel].includes(x)))
                     throw new Error("You can only query the public and user-short unauthenticated.");
@@ -78,28 +61,14 @@ export const PublicStatsController: GraphQLController = {
                             throw new Error(`You have no permission for the '${short}'-short and therefore can not query stats for it.`);
 
                 return {
-                    async urlsCreated() {
-                        if (!shorts.length) return 0;
-                        return DBShortenedUrlModel.countDocuments({short: {$in: shorts}});
-                    },
-                    urlHits() {
-                        return {
-                            async total() {
-                                const result = (await DBShortenedUrlModel.aggregate([{$match: {short: {$in: shorts}}}, {
-                                    $group: {
-                                        _id: null,
-                                        hits: {$sum: '$hits'}
-                                    }
-                                }]))[0].hits;
-                                return result;
-                            },
-                            ofTag: async (args: { tag: string }, context: ApolloContext) => {
-                                if (shorts.length > 1)
-                                    throw new Error("Please specify only one short when querying url-hits of tag.");
+                    urlsCreated: () => getCreatedUrlAmountByShorts(shorts),
+                    urlHits: {
+                        total: () => getTotalUrlHitsByShorts(shorts),
+                        ofTag: ({tag}: { tag: string }) => {
+                            if (shorts.length > 1)
+                                throw new Error("Please specify only one short when querying url-hits of tag.");
 
-                                const result = (await DBShortenedUrlModel.findOne({tag: args.tag, short: shorts[0]}));
-                                return result?.hits;
-                            }
+                            return getUrlHits(shorts[0], tag);
                         }
                     }
                 }

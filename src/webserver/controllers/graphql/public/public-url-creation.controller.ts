@@ -2,7 +2,8 @@ import {gql} from "apollo-server-express";
 import {GraphQLController} from "../../include";
 import {ApolloContext} from "../../../webserver";
 import {ShortenedUrlModel} from "../../../../models/shortened-url.model";
-import {createPublicUrl, tagExistsPublic} from "../../../../routines/url-creation.routines";
+import {tagExistsPublic} from "../../../../routines/urls/url-existence-checks.routine";
+import {createPublicUrl} from "../../../../routines/urls/create-url.routine";
 
 export const PublicUrlCreationController: GraphQLController = {
     typeDefs: [
@@ -16,14 +17,11 @@ export const PublicUrlCreationController: GraphQLController = {
     resolvers: [
         {
             Mutation: {
-                async createPublicUrl(source, args: { tag: string, redirection: string }, context: ApolloContext): Promise<ShortenedUrlModel | null> {
-                    return await createPublicUrl(args.redirection, context.ip, args.tag);
-                }
+                createPublicUrl: (source, args: { tag: string, redirection: string }, context: ApolloContext): Promise<ShortenedUrlModel | null> =>
+                    createPublicUrl(args.redirection, context.ip, args.tag)
             },
             Query: {
-                async existsPublic(source, args: { tag: string }): Promise<boolean> {
-                    return await tagExistsPublic(args.tag);
-                }
+                existsPublic: (source, args: { tag: string }): Promise<boolean> => tagExistsPublic(args.tag)
             }
         }
     ]

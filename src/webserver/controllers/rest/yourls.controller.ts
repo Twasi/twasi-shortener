@@ -1,7 +1,8 @@
 import {RestController} from "../include";
 import {Router, text} from "express";
 import {YourlsRequestModel} from "../../../models/yourls/yourls-request.model";
-import {createPublicUrl, canIpCreatePublicUrl} from "../../../routines/url-creation.routines";
+import {createPublicUrl} from "../../../routines/urls/create-url.routine";
+import {canIpCreatePublicUrl} from "../../../routines/urls/url-creation-permission-checks.routine";
 
 const router = Router();
 router.use(text());
