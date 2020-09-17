@@ -43,7 +43,7 @@ export const Apollo = new ApolloServer({
             try {
                 // Find user by authorization header
                 const {twitchId}: { twitchId: string } = JWT.decode(context.req.headers.authorization) as any;
-                const user = await DBUserModel.findOne({'twitchAccount.twitchId': twitchId}).exec();
+                const user = await DBUserModel.findOne({'twitchAccount.twitchId': twitchId});
                 if (!user) throw new Error();
 
                 // Validate JWT against JWT-secret

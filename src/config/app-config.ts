@@ -6,6 +6,7 @@ import {DefaultTagsConfig} from "./templates/tags.config";
 import {DefaultRedirectUrlsConfig} from "./templates/redirect-urls.config";
 import {DefaultRestrictionsConfig} from "./templates/restrictions.config";
 import {DefaultTwitchConfig} from "./templates/twitch.config";
+import {DefaultPaginationConfig} from "./templates/pagination.config";
 
 const AppConfig = new ConfigManager();
 
@@ -16,3 +17,4 @@ export const RedirectsConfig = AppConfig.configSection('REDIRECT-URLS', DefaultR
 export const ShortsConfig = AppConfig.configSection('URL-SHORTS', DefaultShortsConfig);
 export const TagsConfig = AppConfig.configSection('URL-TAGS', DefaultTagsConfig);
 export const TwitchConfig = AppConfig.configSection('TWITCH', DefaultTwitchConfig);
+export const PaginationConfig = AppConfig.configSection('PAGINATION', DefaultPaginationConfig);

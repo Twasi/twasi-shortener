@@ -42,6 +42,8 @@ export const RootTypeController: GraphQLController = {
             ip: String
         }`,
         gql`type ShortenedUrl {
+            "The internal ID of the created shortlink"
+            _id: String!,
             "The URL's short"
             short: String!,
             "Thus URL's tag"
@@ -52,6 +54,11 @@ export const RootTypeController: GraphQLController = {
             redirection: String!,
             "Information about the creating user"
             createdBy: ShortenedUrlCreator
+        }`,
+        gql`interface Pagination {
+            page: Int!,
+            pages: Int!,
+            total: Int!
         }`
     ]
 }
