@@ -24,6 +24,8 @@ export const RootTypeController: GraphQLController = {
             avatar: String!
             "The email that is set up on Twitch"
             email: String!
+            "The user's rank"
+            rank: String!
         }`,
         gql`type ShortenedUrlCreator {
             "Either 'PUBLIC', 'USER' or 'TEAM'"

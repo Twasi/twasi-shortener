@@ -13,7 +13,7 @@ export const GetMeController: GraphQLController = {
         Query: {
             me: (source, args, context: ApolloContext): TwitchAccountModel | null => {
                 if (!context.authorization) return null;
-                return context.authorization.twitchAccount;
+                return Object.assign(context.authorization.twitchAccount, {rank: context.authorization.rank});
             }
         }
     }]
