@@ -7,7 +7,7 @@ import {canUserUseShort} from "../../../../routines/urls/url-creation-permission
 export const ShortsQueryController: GraphQLController = {
     typeDefs: [
         gql`extend type Query {
-            myShorts: [String]!,
+            myShorts(includeDefaults: Boolean): [String]!,
             canUseShort(short: String!): Boolean!,
             defaultPublicShort: String!,
             defaultAuthenticatedShort: String!
@@ -18,7 +18,7 @@ export const ShortsQueryController: GraphQLController = {
             Query: {
                 myShorts: (source, args, context: ApolloContext) => {
                     if (!context.authorization) return [ShortsConfig.public];
-                    const shorts = [ShortsConfig.public, ShortsConfig.panel];
+                    const shorts = args.includeDefaults !== false ? [] : [ShortsConfig.public, ShortsConfig.panel];
                     // TODO add mappings
                     return shorts;
                 },
