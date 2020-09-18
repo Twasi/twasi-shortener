@@ -62,7 +62,7 @@ export const DBShortenedUrlSchema = new Schema<DBShortenedUrl>({
 });
 DBShortenedUrlSchema.virtual('urlNumber').get(async function () {
     // @ts-ignore
-    return DBShortenedUrlModel.countDocuments({created: {$lte: this.created}});
+    return DBShortenedUrlModel.countDocuments({created: {$lte: this.created}, short: this.short});
 })
 
 export const DBShortenedUrlModel: Model<DBShortenedUrl> = mongoose.model<DBShortenedUrl>('shortened-urls', DBShortenedUrlSchema);

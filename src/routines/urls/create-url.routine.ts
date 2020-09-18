@@ -3,9 +3,9 @@ import {DBShortenedUrl, ShortenedUrlCreatorType, ShortenedUrlModel} from "../../
 import {createRandomTag} from "./generate-random-tag.routine";
 import {ShortsConfig, TagsConfig} from "../../config/app-config";
 import {DBShortenedUrlModel} from "../../database/schemas/shortened-url.schema";
-import {publishPublicUrlCount} from "../../webserver/controllers/graphql/public/public-stats.controller";
 import {canIpCreatePublicUrl, canUserCreateUrl} from "./url-creation-permission-checks.routine";
 import {tagExists} from "./url-existence-checks.routine";
+import {publishUrlCountAndHits} from "../../webserver/controllers/graphql/public/public-stats.controller";
 
 export const createUrl = async (
     short: string,
@@ -46,14 +46,14 @@ export const createUrl = async (
     await dbNewRedirection.validate();
 
     // Save new redirection
-    return await dbNewRedirection.save();
+    const dbRedirection = await dbNewRedirection.save();
+
+    // Publish URL-counts asynchronously
+    publishUrlCountAndHits(short).then();
+
+    return dbRedirection;
 }
 
 export const createPublicUrl = async (redirection: string, ip: string, tag?: string): Promise<DBShortenedUrl> => {
-    const dbNewRedirection = await createUrl(ShortsConfig.public, redirection, {ip}, tag);
-
-    // Trigger subscription
-    publishPublicUrlCount(dbNewRedirection.urlNumber as number).then();
-
-    return dbNewRedirection;
+    return await createUrl(ShortsConfig.public, redirection, {ip}, tag);
 }

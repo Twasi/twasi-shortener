@@ -1,4 +1,4 @@
-import {gql, PubSub} from "apollo-server-express";
+import {gql, PubSub, withFilter} from "apollo-server-express";
 import {GraphQLController} from "../../include";
 import {DBShortenedUrlModel} from "../../../../database/schemas/shortened-url.schema";
 import {ShortsConfig} from "../../../../config/app-config";
@@ -6,12 +6,13 @@ import {ApolloContext} from "../../../webserver";
 import {canUserUseShort} from "../../../../routines/urls/url-creation-permission-checks.routine";
 import {getTotalUrlHitsByShorts, getUrlHits} from "../../../../routines/stats/hit-stats.routine";
 import {getCreatedUrlAmountByShorts} from "../../../../routines/stats/url-count-stats.routine";
+import {manipulateAsyncIterator} from "../../../../routines/pubsub/pubsub-manipulation.routine";
 
 const pubsub = new PubSub();
 const URL_CREATED = 'URL_CREATED';
 
-export const publishPublicUrlCount = async (urlsCreated: number) => {
-    return pubsub.publish(URL_CREATED, {publicStats: {urlsCreated}});
+export const publishUrlCountAndHits = async (short: string) => {
+    return pubsub.publish(URL_CREATED, {short});
 }
 
 export const PublicStatsController: GraphQLController = {
@@ -34,11 +35,12 @@ export const PublicStatsController: GraphQLController = {
             urlNumber: Int!
         }`,
         // Subscriptions
-        gql`type SubPublicStats {
-            urlsCreated: Int!
+        gql`type SubStats {
+            urlsCreated: Int!,
+            urlHits: Int!
         }`,
         gql`extend type Subscription {
-            publicStats: SubPublicStats!
+            globalStats(shorts: [String]!): SubStats!
         }`,
     ],
     resolvers: [{
@@ -75,8 +77,22 @@ export const PublicStatsController: GraphQLController = {
             }
         },
         Subscription: {
-            publicStats: {
-                subscribe: () => pubsub.asyncIterator([URL_CREATED])
+            globalStats: {
+                subscribe: (parent, args: { shorts: Array<string> }, context: ApolloContext, operation) => {
+                    return withFilter(
+                        () => manipulateAsyncIterator(pubsub.asyncIterator(URL_CREATED), input => {
+                            const update = args.shorts.includes(input.short);
+                            return {
+                                update,
+                                globalStats: update ? {
+                                    urlsCreated: getCreatedUrlAmountByShorts(args.shorts),
+                                    urlHits: getTotalUrlHitsByShorts(args.shorts)
+                                } : null,
+                            };
+                        }),
+                        (payload) => payload.update
+                    )(parent, args, context, operation);
+                }
             }
         }
     }]
