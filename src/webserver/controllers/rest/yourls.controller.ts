@@ -13,7 +13,7 @@ router.get('/', async (req, res) => {
     const request: YourlsRequestModel = req.query as any;
 
     try {
-        const result = await createPublicUrl(request.url, req.ip);
+        const result = await createPublicUrl(request.url, req.ip, false, undefined);
         if (result) res.send(req.protocol + '://' + req.hostname + '/' + result.short + '/' + result.tag);
         else res.send('');
     } catch (e) {

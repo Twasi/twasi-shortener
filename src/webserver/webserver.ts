@@ -1,13 +1,14 @@
 import express from 'express';
 import {ApolloServer, IResolvers, makeExecutableSchema} from "apollo-server-express";
 import {DocumentNode, GraphQLControllers, RestControllers} from "./controllers/include";
-import {WebserverConfig as config} from "../config/app-config";
+import {ExtensionConfig, WebserverConfig as config} from "../config/app-config";
 import {SubscriptionServer} from "subscriptions-transport-ws";
 import {createServer} from "http";
 import {execute, subscribe} from 'graphql';
 import {DBUser} from "../models/user.model";
 import JWT from 'jsonwebtoken';
 import {DBUserModel} from "../database/schemas/user.schema";
+import {Extension} from "../config/templates/extension.config";
 
 // Create express app
 const App = express();
@@ -25,7 +26,7 @@ GraphQLControllers.forEach(x => {
 export type ApolloContext = {
     ip: string,
     authorization?: DBUser,
-    extension: false | 'chrome';
+    extension: Extension;
 }
 
 // Create schema from GraphQL controllers
@@ -60,7 +61,7 @@ export const Apollo = new ApolloServer({
         return {
             authorization,
             ip: context.req.ip,
-            extension: false
+            extension: context.req.headers.origin === "chrome-extension://" + ExtensionConfig.ids.chrome ? 'chrome' : false
         }
     },
     debug: config.graphql.debug,

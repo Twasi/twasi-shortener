@@ -6,6 +6,7 @@ import {DBShortenedUrlModel} from "../../database/schemas/shortened-url.schema";
 import {canIpCreatePublicUrl, canUserCreateUrl} from "./url-creation-permission-checks.routine";
 import {tagExists} from "./url-existence-checks.routine";
 import {publishUrlCountAndHits} from "../../webserver/controllers/graphql/public/public-stats.controller";
+import {Extension} from "../../config/templates/extension.config";
 
 export const createUrl = async (
     short: string,
@@ -54,6 +55,6 @@ export const createUrl = async (
     return dbRedirection;
 }
 
-export const createPublicUrl = async (redirection: string, ip: string, tag?: string): Promise<DBShortenedUrl> => {
-    return await createUrl(ShortsConfig.public, redirection, {ip}, tag);
+export const createPublicUrl = async (redirection: string, ip: string, extension: Extension, tag?: string): Promise<DBShortenedUrl> => {
+    return await createUrl(extension !== false ? ShortsConfig.extension : ShortsConfig.public, redirection, {ip}, tag);
 }

@@ -21,8 +21,6 @@ export const AuthenticatedUrlCreationController: GraphQLController = {
 
                     // Check and probably set short
                     if (!args.short) args.short = ShortsConfig.panel;
-                    if (args.short === ShortsConfig.public)
-                        throw new Error("Please use 'createPublicUrl' for this short.");
 
                     // Check if user can use short
                     if (!await canUserUseShort(context.authorization, args.short))
