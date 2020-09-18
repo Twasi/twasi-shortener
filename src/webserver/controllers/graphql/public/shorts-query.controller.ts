@@ -8,6 +8,7 @@ export const ShortsQueryController: GraphQLController = {
     typeDefs: [
         gql`extend type Query {
             myShorts(includeDefaults: Boolean): [String]!,
+            myDefaultShort: String!,
             canUseShort(short: String!): Boolean!,
             defaultPublicShort: String!,
             defaultAuthenticatedShort: String!
@@ -21,6 +22,11 @@ export const ShortsQueryController: GraphQLController = {
                     const shorts = args.includeDefaults !== false ? [ShortsConfig.public, ShortsConfig.panel] : [];
                     // TODO add mappings
                     return shorts;
+                },
+                myDefaultShort: (source, args, context: ApolloContext) => {
+                    return context.extension ? ShortsConfig.extension :
+                        context.authorization ? ShortsConfig.panel :
+                            ShortsConfig.public;
                 },
                 canUseShort: async (source, args, context: ApolloContext) => {
                     if (!context.authorization) return ShortsConfig.public === args.short;

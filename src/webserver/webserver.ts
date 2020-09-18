@@ -24,7 +24,8 @@ GraphQLControllers.forEach(x => {
 // Declare Apollo context
 export type ApolloContext = {
     ip: string,
-    authorization?: DBUser
+    authorization?: DBUser,
+    extension: false | 'chrome';
 }
 
 // Create schema from GraphQL controllers
@@ -58,7 +59,8 @@ export const Apollo = new ApolloServer({
 
         return {
             authorization,
-            ip: context.req.ip
+            ip: context.req.ip,
+            extension: false
         }
     },
     debug: config.graphql.debug,
