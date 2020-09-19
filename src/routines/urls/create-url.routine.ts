@@ -5,7 +5,7 @@ import {ShortsConfig, TagsConfig} from "../../config/app-config";
 import {DBShortenedUrlModel} from "../../database/schemas/shortened-url.schema";
 import {canIpCreatePublicUrl, canUserCreateUrl} from "./url-permission-checks.routine";
 import {tagExists} from "./url-existence-checks.routine";
-import {publishUrlCountAndHits} from "../../webserver/controllers/graphql/public/public-stats.controller";
+import {publishUrlUpdate} from "../../webserver/controllers/graphql/public/public-stats.controller";
 import {Extension} from "../../config/templates/extension.config";
 
 export const createUrl = async (
@@ -50,7 +50,7 @@ export const createUrl = async (
     const dbRedirection = await dbNewRedirection.save();
 
     // Publish URL-counts asynchronously
-    publishUrlCountAndHits(short).then();
+    publishUrlUpdate(dbNewRedirection).then();
 
     return dbRedirection;
 }

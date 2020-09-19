@@ -32,6 +32,25 @@ export type ApolloContext = {
 // Create schema from GraphQL controllers
 export const schema = makeExecutableSchema({typeDefs, resolvers});
 
+export const checkAuthToken = async (token?: string) => { // TODO move to routine
+    if (!token)
+        throw new Error("Unauthenticated.");
+    try {
+        // Find user by authorization header
+        const {twitchId}: { twitchId: string } = JWT.decode(token) as any;
+        const user = await DBUserModel.findOne({'twitchAccount.twitchId': twitchId});
+        if (!user) throw new Error();
+
+        // Validate JWT against JWT-secret
+        JWT.verify(token, user.jwtSecret);
+
+        // Finally return authorization
+        return user;
+    } catch (e) {
+        throw new Error("Wrong authorization header.");
+    }
+}
+
 // Create Apollo GraphQL-server
 export const Apollo = new ApolloServer({
     mocks: config.graphql.mock,
@@ -41,22 +60,8 @@ export const Apollo = new ApolloServer({
 
         // Check for authorization header
         let authorization = undefined;
-        if (context.req.headers.authorization) {
-            try {
-                // Find user by authorization header
-                const {twitchId}: { twitchId: string } = JWT.decode(context.req.headers.authorization) as any;
-                const user = await DBUserModel.findOne({'twitchAccount.twitchId': twitchId});
-                if (!user) throw new Error();
-
-                // Validate JWT against JWT-secret
-                JWT.verify(context.req.headers.authorization, user.jwtSecret);
-
-                // Finally set authorization
-                authorization = user;
-            } catch (e) {
-                throw new Error("Wrong authorization header.");
-            }
-        }
+        if (context.req.headers.authorization)
+            authorization = await checkAuthToken(context.req.headers.authorization);
 
         return {
             authorization,
@@ -66,7 +71,14 @@ export const Apollo = new ApolloServer({
     },
     debug: config.graphql.debug,
     subscriptions: {
-        path: config.graphql.wsUrl
+        path: config.graphql.wsUrl,
+        onConnect: async (connectionParams: { authToken?: string }, websocket, context): Promise<ApolloContext> => {
+            return {
+                authorization: connectionParams.authToken ? await checkAuthToken(connectionParams.authToken) : undefined,
+                extension: false,
+                ip: context.request.connection.remoteAddress || ""
+            }
+        }
     },
     schema,
     typeDefs,
@@ -88,5 +100,8 @@ App.use('*', (req, res) => res.redirect(config.fallback));
 // Export WebServer for usage in other files
 export const WebServer = App;
 export const startWebServer = () => server.listen(config.port, () => {
-    new SubscriptionServer({schema, subscribe, execute}, {path: config.graphql.wsUrl, server});
+    new SubscriptionServer({
+        schema, subscribe, execute
+    }, {path: config.graphql.wsUrl, server});
+    // Apollo.installSubscriptionHandlers(server);
 });

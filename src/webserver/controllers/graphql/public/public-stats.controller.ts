@@ -7,12 +7,13 @@ import {canUserUseShort} from "../../../../routines/urls/url-permission-checks.r
 import {getTotalUrlHitsByShorts, getUrlHits} from "../../../../routines/stats/hit-stats.routine";
 import {getCreatedUrlAmountByShorts} from "../../../../routines/stats/url-count-stats.routine";
 import {manipulateAsyncIterator} from "../../../../routines/pubsub/pubsub-manipulation.routine";
+import {DBShortenedUrl} from "../../../../models/shortened-url.model";
 
-const pubsub = new PubSub();
-const URL_CREATED = 'URL_CREATED';
+export const urlUpdatePubSub = new PubSub();
+export const URL_UPDATED = 'URL_UPDATED';
 
-export const publishUrlCountAndHits = async (short: string) => {
-    return pubsub.publish(URL_CREATED, {short});
+export const publishUrlUpdate = async (shortenedUrl: DBShortenedUrl) => {
+    return urlUpdatePubSub.publish(URL_UPDATED, shortenedUrl);
 }
 
 export const PublicStatsController: GraphQLController = {
@@ -80,7 +81,7 @@ export const PublicStatsController: GraphQLController = {
             globalStats: {
                 subscribe: (parent, args: { shorts: Array<string> }, context: ApolloContext, operation) => {
                     return withFilter(
-                        () => manipulateAsyncIterator(pubsub.asyncIterator(URL_CREATED), input => {
+                        () => manipulateAsyncIterator(urlUpdatePubSub.asyncIterator(URL_UPDATED), (input: DBShortenedUrl) => {
                             const update = args.shorts.includes(input.short);
                             return {
                                 update,

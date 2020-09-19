@@ -1,13 +1,13 @@
 import {RestController} from "../include";
 import {Router} from "express";
 import {DBShortenedUrlModel} from "../../../database/schemas/shortened-url.schema";
-import {publishUrlCountAndHits} from "../graphql/public/public-stats.controller";
+import {publishUrlUpdate} from "../graphql/public/public-stats.controller";
 
 async function findRedirection(short: string, tag: string): Promise<string | null> {
     const result = await DBShortenedUrlModel.findOne({short, tag});
     if (result) {
         typeof result.hits === "number" ? result.hits++ : result.hits = 0;
-        result.save().then(() => publishUrlCountAndHits(result.short).then());
+        result.save().then(() => publishUrlUpdate(result).then());
         return result.redirection;
     }
     return null;
