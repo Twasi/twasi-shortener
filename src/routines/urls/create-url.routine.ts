@@ -3,7 +3,7 @@ import {DBShortenedUrl, ShortenedUrlCreatorType, ShortenedUrlModel} from "../../
 import {createRandomTag} from "./generate-random-tag.routine";
 import {ShortsConfig, TagsConfig} from "../../config/app-config";
 import {DBShortenedUrlModel} from "../../database/schemas/shortened-url.schema";
-import {canIpCreatePublicUrl, canUserCreateUrl} from "./url-creation-permission-checks.routine";
+import {canIpCreatePublicUrl, canUserCreateUrl} from "./url-permission-checks.routine";
 import {tagExists} from "./url-existence-checks.routine";
 import {publishUrlCountAndHits} from "../../webserver/controllers/graphql/public/public-stats.controller";
 import {Extension} from "../../config/templates/extension.config";

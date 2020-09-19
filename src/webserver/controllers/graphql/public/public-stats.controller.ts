@@ -3,7 +3,7 @@ import {GraphQLController} from "../../include";
 import {DBShortenedUrlModel} from "../../../../database/schemas/shortened-url.schema";
 import {ShortsConfig} from "../../../../config/app-config";
 import {ApolloContext} from "../../../webserver";
-import {canUserUseShort} from "../../../../routines/urls/url-creation-permission-checks.routine";
+import {canUserUseShort} from "../../../../routines/urls/url-permission-checks.routine";
 import {getTotalUrlHitsByShorts, getUrlHits} from "../../../../routines/stats/hit-stats.routine";
 import {getCreatedUrlAmountByShorts} from "../../../../routines/stats/url-count-stats.routine";
 import {manipulateAsyncIterator} from "../../../../routines/pubsub/pubsub-manipulation.routine";

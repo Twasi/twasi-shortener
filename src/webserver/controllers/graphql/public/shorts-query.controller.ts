@@ -2,7 +2,7 @@ import {gql} from "apollo-server-express";
 import {GraphQLController} from "../../include";
 import {ShortsConfig} from "../../../../config/app-config";
 import {ApolloContext} from "../../../webserver";
-import {canUserUseShort} from "../../../../routines/urls/url-creation-permission-checks.routine";
+import {canUserUseShort} from "../../../../routines/urls/url-permission-checks.routine";
 
 export const ShortsQueryController: GraphQLController = {
     typeDefs: [

@@ -14,6 +14,7 @@ import {AuthenticatedUrlCreationController} from "./graphql/authenticated/authen
 import {UrlQueryController} from "./graphql/authenticated/url-query.controller";
 import {GetMeController} from "./graphql/authenticated/get-me.controller";
 import {ShortsQueryController} from "./graphql/public/shorts-query.controller";
+import {EditUrlsController} from "./graphql/authenticated/edit-urls.controller";
 
 export type DocumentNode = {
     readonly kind: 'Document';
@@ -38,5 +39,6 @@ export const GraphQLControllers: Array<GraphQLController> = [
     PublicStatsController,
     UrlQueryController,
     ShortsQueryController,
-    GetMeController
+    GetMeController,
+    EditUrlsController
 ];

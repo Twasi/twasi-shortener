@@ -32,3 +32,11 @@ export const canUserCreateUrl = async (user: DBUser, short: string): Promise<boo
 
     return createdRecently < restriction.maxUrls;
 }
+
+export const canUserEditOrDeleteUrl = async (user: DBUser, id: string) => {
+    if (user.rank === UserRank.TEAM) return true;
+
+    const model = await DBShortenedUrlModel.findOne({_id: id});
+    if (!model) return false;
+    return model.createdBy.id?.toString() === user._id.toString();
+}

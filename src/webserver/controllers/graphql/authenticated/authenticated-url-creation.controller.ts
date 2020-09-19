@@ -3,7 +3,7 @@ import {GraphQLController} from "../../include";
 import {ApolloContext} from "../../../webserver";
 import {ShortsConfig} from "../../../../config/app-config";
 import {createUrl} from "../../../../routines/urls/create-url.routine";
-import {canUserUseShort} from "../../../../routines/urls/url-creation-permission-checks.routine";
+import {canUserUseShort} from "../../../../routines/urls/url-permission-checks.routine";
 
 export const AuthenticatedUrlCreationController: GraphQLController = {
     typeDefs: [
