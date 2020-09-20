@@ -3,7 +3,7 @@ import {GraphQLController} from "../../include";
 import {DBShortenedUrlModel} from "../../../../database/schemas/shortened-url.schema";
 import {ShortsConfig} from "../../../../config/app-config";
 import {ApolloContext} from "../../../webserver";
-import {canUserUseShort} from "../../../../routines/urls/url-permission-checks.routine";
+import {canUserQueryShort} from "../../../../routines/urls/url-permission-checks.routine";
 import {getTotalUrlHitsByShorts, getUrlHits} from "../../../../routines/stats/hit-stats.routine";
 import {getCreatedUrlAmountByShorts} from "../../../../routines/stats/url-count-stats.routine";
 import {manipulateAsyncIterator} from "../../../../routines/pubsub/pubsub-manipulation.routine";
@@ -60,7 +60,7 @@ export const PublicStatsController: GraphQLController = {
 
                 if (context.authorization)
                     for (let short of shorts)
-                        if (!await canUserUseShort(context.authorization, short))
+                        if (!await canUserQueryShort(context.authorization, short))
                             throw new Error(`You have no permission for the '${short}'-short and therefore can not query stats for it.`);
 
                 return {

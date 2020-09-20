@@ -58,6 +58,10 @@ export const DBShortenedUrlSchema = new Schema<DBShortenedUrl>({
         type: Number,
         required: true,
         default: 0
+    },
+    classification: {
+        type: Boolean,
+        required: false
     }
 });
 DBShortenedUrlSchema.virtual('urlNumber').get(async function () {

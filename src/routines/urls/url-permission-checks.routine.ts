@@ -7,6 +7,10 @@ export const canUserUseShort = async (user: DBUser, short: string): Promise<bool
     return user.rank === UserRank.TEAM || [ShortsConfig.panel, ShortsConfig.public].includes(short); // TODO add mappings
 }
 
+export const canUserQueryShort = async (user: DBUser, short: string): Promise<boolean> => {
+    return short === ShortsConfig.extension || await canUserUseShort(user, short);
+}
+
 export const canIpCreatePublicUrl = async (ip: string): Promise<boolean> => {
     const restriction = RestrictionsConfig.public;
     const createdRecently = (await DBShortenedUrlModel.countDocuments(

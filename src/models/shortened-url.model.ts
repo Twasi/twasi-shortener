@@ -17,7 +17,8 @@ export interface ShortenedUrlModel {
         ip?: string
     },
     hits?: number,
-    urlNumber?: number
+    urlNumber?: number,
+    classification?: boolean
 }
 
 export interface DBShortenedUrl extends ShortenedUrlModel, Document {
