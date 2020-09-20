@@ -11,13 +11,15 @@ export const ShortsQueryController: GraphQLController = {
             myDefaultShort: String!,
             canUseShort(short: String!): Boolean!,
             defaultPublicShort: String!,
-            defaultAuthenticatedShort: String!
+            defaultAuthenticatedShort: String!,
+            defaultExtensionShort: String!
         }`
     ],
     resolvers: [
         {
             Query: {
                 myShorts: (source, args, context: ApolloContext) => {
+                    if (context.extension) return [ShortsConfig.extension];
                     if (!context.authorization) return [ShortsConfig.public];
                     const shorts = args.includeDefaults !== false ? [ShortsConfig.public, ShortsConfig.panel] : [];
                     // TODO add mappings
@@ -29,11 +31,13 @@ export const ShortsQueryController: GraphQLController = {
                             ShortsConfig.public;
                 },
                 canUseShort: async (source, args, context: ApolloContext) => {
-                    if (!context.authorization) return ShortsConfig.public === args.short;
+                    if (context.extension) return args.short === ShortsConfig.extension;
+                    if (!context.authorization) return args.short === ShortsConfig.public;
                     return canUserUseShort(context.authorization, args.short);
                 },
                 defaultPublicShort: () => ShortsConfig.public,
                 defaultAuthenticatedShort: () => ShortsConfig.panel,
+                defaultExtensionShort: () => ShortsConfig.extension,
             }
         }
     ]

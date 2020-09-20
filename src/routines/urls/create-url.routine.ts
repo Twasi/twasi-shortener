@@ -7,6 +7,7 @@ import {canIpCreatePublicUrl, canUserCreateUrl} from "./url-permission-checks.ro
 import {tagExists} from "./url-existence-checks.routine";
 import {publishUrlUpdate} from "../../webserver/controllers/graphql/public/public-stats.controller";
 import {Extension} from "../../config/templates/extension.config";
+import {autoClassify} from "../classification/auto-classify.routine";
 
 export const createUrl = async (
     short: string,
@@ -51,6 +52,15 @@ export const createUrl = async (
 
     // Publish URL-counts asynchronously
     publishUrlUpdate(dbNewRedirection).then();
+
+    // auto-classify
+    autoClassify(dbRedirection).then(value => {
+        if (value === null) return;
+        dbRedirection.classification = value;
+        dbRedirection.save();
+    });
+
+    console.log(`[New redirection] /${dbRedirection.short}/${dbRedirection.tag} => ${dbRedirection.redirection}`);
 
     return dbRedirection;
 }

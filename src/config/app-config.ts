@@ -8,6 +8,7 @@ import {DefaultRestrictionsConfig} from "./templates/restrictions.config";
 import {DefaultTwitchConfig} from "./templates/twitch.config";
 import {DefaultPaginationConfig} from "./templates/pagination.config";
 import {DefaultExtensionConfig} from "./templates/extension.config";
+import {DefaultClassificationConfig} from "./templates/classification.config";
 
 const AppConfig = new ConfigManager();
 
@@ -20,3 +21,4 @@ export const TagsConfig = AppConfig.configSection('URL-TAGS', DefaultTagsConfig)
 export const TwitchConfig = AppConfig.configSection('TWITCH', DefaultTwitchConfig);
 export const PaginationConfig = AppConfig.configSection('PAGINATION', DefaultPaginationConfig);
 export const ExtensionConfig = AppConfig.configSection('EXTENSION', DefaultExtensionConfig);
+export const ClassificationConfig = AppConfig.configSection('CLASSIFICATION', DefaultClassificationConfig);
