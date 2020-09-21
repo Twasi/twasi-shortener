@@ -1,11 +1,8 @@
 import {connect} from "mongoose";
-import {ConfigManager} from "merlins-config-manager";
-import {DefaultDatabaseConfig} from "../src/config/templates/database.config";
 import {DBShortenedUrlModel} from "../src/database/schemas/shortened-url.schema";
 import inquirer from 'inquirer';
 import {redirectionToSameHostQuery} from "../src/routines/urls/find-same-host.routine";
-
-const DatabaseConfig = new ConfigManager().configSection("DATABASE", DefaultDatabaseConfig);
+import {DatabaseConfig} from "../src/config/app-config";
 
 (async () => {
     console.log("Using database credentials from config.json.");

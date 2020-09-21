@@ -7,7 +7,8 @@
     "dev": "ts-node src/index.ts",
     "build": "tsc",
     "create-deployment-build": "ts-node build.ts",
-    "classificate-database": "ts-node cli/classificate-database-items.cli.ts"
+    "classificate-database": "ts-node cli/classificate-database-items.cli.ts",
+    "test-neural-network": "ts-node cli/test-neural-network.cli.ts"
   },
   "keywords": [],
   "author": "",
