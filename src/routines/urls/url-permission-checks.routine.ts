@@ -11,6 +11,14 @@ export const canUserQueryShort = async (user: DBUser, short: string): Promise<bo
     return short === ShortsConfig.extension || await canUserUseShort(user, short);
 }
 
+export const canAnonymousQueryShort = (short: string): boolean => {
+    return getDefaultShorts().includes(short);
+}
+
+export const getDefaultShorts = () => {
+    return [ShortsConfig.public, ShortsConfig.panel, ShortsConfig.extension];
+}
+
 export const canIpCreatePublicUrl = async (ip: string): Promise<boolean> => {
     const restriction = RestrictionsConfig.public;
     const createdRecently = (await DBShortenedUrlModel.countDocuments(

@@ -3,7 +3,7 @@ import {GraphQLController} from "../../include";
 import {DBShortenedUrlModel} from "../../../../database/schemas/shortened-url.schema";
 import {ShortsConfig} from "../../../../config/app-config";
 import {ApolloContext} from "../../../webserver";
-import {canUserQueryShort} from "../../../../routines/urls/url-permission-checks.routine";
+import {canAnonymousQueryShort, canUserQueryShort} from "../../../../routines/urls/url-permission-checks.routine";
 import {getTotalUrlHitsByShorts, getUrlHits} from "../../../../routines/stats/hit-stats.routine";
 import {getCreatedUrlAmountByShorts} from "../../../../routines/stats/url-count-stats.routine";
 import {manipulateAsyncIterator} from "../../../../routines/pubsub/pubsub-manipulation.routine";
@@ -55,7 +55,7 @@ export const PublicStatsController: GraphQLController = {
                 }
             }),
             globalStats: async (source, {shorts}: { shorts: Array<string> }, context: ApolloContext) => {
-                if (!context.authorization && !shorts.every(x => [ShortsConfig.public, ShortsConfig.panel].includes(x)))
+                if (!context.authorization && shorts.some(short => !canAnonymousQueryShort(short)))
                     throw new Error("You can only query the public and user-short unauthenticated.");
 
                 if (context.authorization)
