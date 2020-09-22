@@ -2,7 +2,7 @@ import {RestController} from "../include";
 import {Router} from "express";
 import {DBShortenedUrlModel} from "../../../database/schemas/shortened-url.schema";
 import {publishUrlUpdate} from "../graphql/public/public-stats.controller";
-import {DBShortenedUrl} from "../../../models/shortened-url.model";
+import {DBShortenedUrl} from "../../../models/urls/shortened-url.model";
 
 async function findRedirection(short: string, tag: string): Promise<DBShortenedUrl | null> {
     const result = await DBShortenedUrlModel.findOne({short, tag});
