@@ -3,7 +3,7 @@ import {GraphQLController} from "../../include";
 import {urlUpdatePubSub, URL_UPDATED} from "../public/public-stats.controller";
 import {manipulateAsyncIterator} from "../../../../routines/pubsub/pubsub-manipulation.routine";
 import {ApolloContext, checkAuthToken} from "../../../webserver";
-import {DBShortenedUrl} from "../../../../models/shortened-url.model";
+import {DBShortenedUrl} from "../../../../models/urls/shortened-url.model";
 
 export const OwnUrlCountsController: GraphQLController = {
     typeDefs: [

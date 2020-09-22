@@ -1,7 +1,7 @@
 import {gql} from "apollo-server-express";
 import {GraphQLController} from "../../include";
 import {ApolloContext} from "../../../webserver";
-import {TwitchAccountModel} from "../../../../models/user.model";
+import {TwitchAccountModel} from "../../../../models/users/user.model";
 
 export const GetMeController: GraphQLController = {
     typeDefs: [

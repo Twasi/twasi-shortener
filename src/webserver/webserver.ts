@@ -5,7 +5,7 @@ import {ExtensionConfig, WebserverConfig as config} from "../config/app-config";
 import {SubscriptionServer} from "subscriptions-transport-ws";
 import {createServer} from "http";
 import {execute, subscribe} from 'graphql';
-import {DBUser} from "../models/user.model";
+import {DBUser} from "../models/users/user.model";
 import JWT from 'jsonwebtoken';
 import {DBUserModel} from "../database/schemas/user.schema";
 import {Extension} from "../config/templates/extension.config";
@@ -26,7 +26,8 @@ GraphQLControllers.forEach(x => {
 export type ApolloContext = {
     ip: string,
     authorization?: DBUser,
-    extension: Extension;
+    extension: Extension,
+    host: string
 }
 
 // Create schema from GraphQL controllers
@@ -66,7 +67,8 @@ export const Apollo = new ApolloServer({
         return {
             authorization,
             ip: context.req.ip,
-            extension: context.req.headers.origin === "chrome-extension://" + ExtensionConfig.ids.chrome ? 'chrome' : false
+            extension: context.req.headers.origin === "chrome-extension://" + ExtensionConfig.ids.chrome ? 'chrome' : false,
+            host: context.req.hostname
         }
     },
     debug: config.graphql.debug,
@@ -76,7 +78,8 @@ export const Apollo = new ApolloServer({
             return {
                 authorization: connectionParams.authToken ? await checkAuthToken(connectionParams.authToken) : undefined,
                 extension: false,
-                ip: context.request.connection.remoteAddress || ""
+                ip: context.request.connection.remoteAddress || "",
+                host: context.request.headers.host || ""
             }
         }
     },

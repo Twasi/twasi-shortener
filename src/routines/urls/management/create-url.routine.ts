@@ -1,19 +1,22 @@
-import {DBUser, UserRank} from "../../models/user.model";
-import {DBShortenedUrl, ShortenedUrlCreatorType, ShortenedUrlModel} from "../../models/shortened-url.model";
-import {createRandomTag} from "./generate-random-tag.routine";
-import {ShortsConfig, TagsConfig} from "../../config/app-config";
-import {DBShortenedUrlModel} from "../../database/schemas/shortened-url.schema";
-import {canIpCreatePublicUrl, canUserCreateUrl} from "./url-permission-checks.routine";
-import {tagExists} from "./url-existence-checks.routine";
-import {publishUrlUpdate} from "../../webserver/controllers/graphql/public/public-stats.controller";
-import {Extension} from "../../config/templates/extension.config";
-import {autoClassify} from "../classification/auto-classify.routine";
+import {DBUser, UserRank} from "../../../models/users/user.model";
+import {DBShortenedUrl, ShortenedUrlCreatorType, ShortenedUrlModel} from "../../../models/urls/shortened-url.model";
+import {createRandomTag} from "../helpers/generate-random-tag.routine";
+import {ShortsConfig, TagsConfig} from "../../../config/app-config";
+import {DBShortenedUrlModel} from "../../../database/schemas/shortened-url.schema";
+import {canIpCreatePublicUrl, canUserCreateUrl} from "../checks/url-permission-checks.routine";
+import {tagExists} from "../checks/url-existence-checks.routine";
+import {publishUrlUpdate} from "../../../webserver/controllers/graphql/public/public-stats.controller";
+import {Extension} from "../../../config/templates/extension.config";
+import {autoClassify} from "../../classification/auto-classify.routine";
+import {testUrl} from "../tests/test-url.routine";
+import {URLTestResultCodes} from "../../../models/urls/tests/URLTestResults";
 
 export const createUrl = async (
     short: string,
     redirection: string,
     {user, ip}: { user?: DBUser, ip: string } | { user: DBUser, ip?: string },
     tag?: string,
+    host?: string
 ): Promise<DBShortenedUrl> => {
 
     if (!tag) {
@@ -26,6 +29,16 @@ export const createUrl = async (
 
     if ((user && !await canUserCreateUrl(user, short)) || (ip && !await canIpCreatePublicUrl(ip)))
         throw new Error("You are creating too many redirections. Please cool it down.");
+
+    const {result} = await testUrl(redirection, host ? {hostname: host} : undefined);
+    if ([
+        URLTestResultCodes.NOT_EXISTING,
+        URLTestResultCodes.SAME_HOST,
+        URLTestResultCodes.UNKNOWN,
+        URLTestResultCodes.TOO_MANY_REDIRECTIONS,
+        URLTestResultCodes.BAD_URL
+    ].includes(result.STATUS))
+        throw new Error(result.MESSAGE);
 
     // Create new redirection
     const newRedirection: ShortenedUrlModel = {
@@ -65,6 +78,6 @@ export const createUrl = async (
     return dbRedirection;
 }
 
-export const createPublicUrl = async (redirection: string, ip: string, extension: Extension, tag?: string): Promise<DBShortenedUrl> => {
-    return await createUrl(extension !== false ? ShortsConfig.extension : ShortsConfig.public, redirection, {ip}, tag);
+export const createPublicUrl = async (redirection: string, ip: string, extension: Extension, host: string, tag?: string): Promise<DBShortenedUrl> => {
+    return await createUrl(extension !== false ? ShortsConfig.extension : ShortsConfig.public, redirection, {ip}, tag, host);
 }

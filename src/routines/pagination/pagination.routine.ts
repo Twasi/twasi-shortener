@@ -1,5 +1,5 @@
 import {Document, Model, Query} from "mongoose";
-import {PaginationModel} from "../../models/pagination.model";
+import {PaginationModel} from "../../models/graphql/pagination.model";
 import {PaginationConfig} from "../../config/app-config";
 
 export const paginationFrom = async <T extends Document>(query: Query<Array<T>>, {page, pageSize}: { page?: number, pageSize?: number }): Promise<PaginationModel<T>> => {

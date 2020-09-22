@@ -1,7 +1,7 @@
 import {connect} from "mongoose";
 import {DBShortenedUrlModel} from "../src/database/schemas/shortened-url.schema";
 import inquirer from 'inquirer';
-import {redirectionToSameHostQuery} from "../src/routines/urls/find-same-host.routine";
+import {redirectionToSameHostQuery} from "../src/routines/urls/helpers/find-same-host.routine";
 import {DatabaseConfig} from "../src/config/app-config";
 
 (async () => {

@@ -2,8 +2,8 @@ import {gql} from "apollo-server-express";
 import {GraphQLController} from "../../include";
 import {ApolloContext} from "../../../webserver";
 import {ShortsConfig} from "../../../../config/app-config";
-import {createUrl} from "../../../../routines/urls/create-url.routine";
-import {canUserUseShort} from "../../../../routines/urls/url-permission-checks.routine";
+import {createUrl} from "../../../../routines/urls/management/create-url.routine";
+import {canUserUseShort} from "../../../../routines/urls/checks/url-permission-checks.routine";
 
 export const AuthenticatedUrlCreationController: GraphQLController = {
     typeDefs: [
@@ -29,7 +29,7 @@ export const AuthenticatedUrlCreationController: GraphQLController = {
                     return await createUrl(args.short, args.redirection, {
                         ip: context.ip,
                         user: context.authorization
-                    }, args.tag);
+                    }, args.tag, context.host);
                 }
             }
         }

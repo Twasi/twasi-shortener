@@ -1,5 +1,5 @@
-import {DBShortenedUrl} from "../../models/shortened-url.model";
-import {DBShortenedUrlModel} from "../../database/schemas/shortened-url.schema";
+import {DBShortenedUrl} from "../../../models/urls/shortened-url.model";
+import {DBShortenedUrlModel} from "../../../database/schemas/shortened-url.schema";
 
 export const editUrl = async (id: string, newRedirection: string): Promise<DBShortenedUrl | null> => {
     const model = await DBShortenedUrlModel.findById(id);

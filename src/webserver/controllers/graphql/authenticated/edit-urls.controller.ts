@@ -1,8 +1,8 @@
 import {gql} from "apollo-server-express";
 import {GraphQLController} from "../../include";
-import {canUserEditOrDeleteUrl} from "../../../../routines/urls/url-permission-checks.routine";
-import {editUrl} from "../../../../routines/urls/edit-url.routine";
-import {deleteUrl} from "../../../../routines/urls/delete-url.routine";
+import {canUserEditOrDeleteUrl} from "../../../../routines/urls/checks/url-permission-checks.routine";
+import {editUrl} from "../../../../routines/urls/management/edit-url.routine";
+import {deleteUrl} from "../../../../routines/urls/management/delete-url.routine";
 
 export const EditUrlsController: GraphQLController = {
     typeDefs: [

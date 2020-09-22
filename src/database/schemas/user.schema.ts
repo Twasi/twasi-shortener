@@ -1,5 +1,5 @@
 import mongoose, {Schema} from "mongoose";
-import {DBUser, TwitchAccountModel, UserModel, UserRank} from "../../models/user.model";
+import {DBUser, TwitchAccountModel, UserModel, UserRank} from "../../models/users/user.model";
 import JWT from 'jsonwebtoken';
 
 const makeJwtSecret = (length: number): string => {

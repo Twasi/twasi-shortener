@@ -1,7 +1,7 @@
-import {DBUser, UserRank} from "../../models/user.model";
-import {RestrictionsConfig, ShortsConfig} from "../../config/app-config";
-import {ShortenedUrlCreatorType} from "../../models/shortened-url.model";
-import {DBShortenedUrlModel} from "../../database/schemas/shortened-url.schema";
+import {DBUser, UserRank} from "../../../models/users/user.model";
+import {RestrictionsConfig, ShortsConfig} from "../../../config/app-config";
+import {ShortenedUrlCreatorType} from "../../../models/urls/shortened-url.model";
+import {DBShortenedUrlModel} from "../../../database/schemas/shortened-url.schema";
 
 export const canUserUseShort = async (user: DBUser, short: string): Promise<boolean> => {
     return user.rank === UserRank.TEAM || [ShortsConfig.panel, ShortsConfig.public].includes(short); // TODO add mappings

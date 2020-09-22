@@ -6,7 +6,7 @@ import {ApiClient} from "twitch";
 import axios from 'axios';
 import querystring from 'querystring';
 import {DBUserModel} from "../../../database/schemas/user.schema";
-import {DBUser, UserModel} from "../../../models/user.model";
+import {DBUser, UserModel} from "../../../models/users/user.model";
 
 const router = Router();
 

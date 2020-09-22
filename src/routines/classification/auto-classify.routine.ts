@@ -1,5 +1,5 @@
-import {DBShortenedUrl} from "../../models/shortened-url.model";
-import {redirectionToSameHostQuery} from "../urls/find-same-host.routine";
+import {DBShortenedUrl} from "../../models/urls/shortened-url.model";
+import {redirectionToSameHostQuery} from "../urls/helpers/find-same-host.routine";
 import {DBShortenedUrlModel} from "../../database/schemas/shortened-url.schema";
 import {ClassificationConfig} from "../../config/app-config";
 
