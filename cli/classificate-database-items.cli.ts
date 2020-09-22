@@ -49,7 +49,8 @@ import {DatabaseConfig} from "../src/config/app-config";
                 }])).answer;
                 if (updateAll === "Yes") {
                     const updated = await DBShortenedUrlModel.updateMany(filterQuery, {classification: result === "Yes"});
-                    console.log(`${updated.n} documents updated.`)
+                    console.log(`${updated.n} documents updated.`);
+                    editedDocuments += updated.n;
                 }
             }
 
