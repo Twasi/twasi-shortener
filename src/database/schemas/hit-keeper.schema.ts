@@ -1,5 +1,5 @@
 import {model, Schema} from "mongoose";
-import {DBHitKeeper} from "../../models/hit-keeper.model";
+import {DBHitKeeper} from "../../models/urls/hit-keeper.model";
 
 export const HitKeeperSchema = new Schema<DBHitKeeper>({
     short: {

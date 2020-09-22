@@ -1,5 +1,5 @@
-import {DBShortenedUrlModel} from "../../database/schemas/shortened-url.schema";
-import {DBHitKeeperModel} from "../../database/schemas/hit-keeper.schema";
+import {DBShortenedUrlModel} from "../../../database/schemas/shortened-url.schema";
+import {DBHitKeeperModel} from "../../../database/schemas/hit-keeper.schema";
 
 export const keepHits = async (short: string, hits: number) => {
     let hitKeeper = await DBHitKeeperModel.findOne({short});

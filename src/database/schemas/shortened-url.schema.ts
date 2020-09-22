@@ -1,6 +1,6 @@
 import * as mongoose from "mongoose";
 import {Model, Schema} from "mongoose";
-import {DBShortenedUrl, ShortenedUrlCreatorType} from "../../models/shortened-url.model";
+import {DBShortenedUrl, ShortenedUrlCreatorType} from "../../models/urls/shortened-url.model";
 import {RedirectsConfig, TagsConfig} from "../../config/app-config";
 
 const CreatorSubSchema = new Schema({

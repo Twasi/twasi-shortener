@@ -3,11 +3,11 @@ import {GraphQLController} from "../../include";
 import {DBShortenedUrlModel} from "../../../../database/schemas/shortened-url.schema";
 import {ShortsConfig} from "../../../../config/app-config";
 import {ApolloContext} from "../../../webserver";
-import {canAnonymousQueryShort, canUserQueryShort} from "../../../../routines/urls/url-permission-checks.routine";
+import {canAnonymousQueryShort, canUserQueryShort} from "../../../../routines/urls/checks/url-permission-checks.routine";
 import {getTotalUrlHitsByShorts, getUrlHits} from "../../../../routines/stats/hit-stats.routine";
 import {getCreatedUrlAmountByShorts} from "../../../../routines/stats/url-count-stats.routine";
 import {manipulateAsyncIterator} from "../../../../routines/pubsub/pubsub-manipulation.routine";
-import {DBShortenedUrl} from "../../../../models/shortened-url.model";
+import {DBShortenedUrl} from "../../../../models/urls/shortened-url.model";
 
 export const urlUpdatePubSub = new PubSub();
 export const URL_UPDATED = 'URL_UPDATED';
