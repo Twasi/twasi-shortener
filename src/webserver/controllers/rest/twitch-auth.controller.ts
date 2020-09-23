@@ -7,6 +7,7 @@ import axios from 'axios';
 import querystring from 'querystring';
 import {DBUserModel} from "../../../database/schemas/user.schema";
 import {DBUser, UserModel} from "../../../models/users/user.model";
+import path from "path";
 
 const router = Router();
 
@@ -72,11 +73,15 @@ router.get('/authenticate/callback', async (req, res) => {
         }
 
         const jwt = dbUser.makeJwt;
-        res.redirect('/static/html/save-jwt.html?jwt=' + encodeURIComponent(jwt));
+        res.redirect('/twitch-authentication/save-jwt?jwt=' + encodeURIComponent(jwt));
     } catch (e) {
         return res.redirect('/twitch-authentication/authenticate');
     }
 });
+
+router.get("/save-jwt", (req, res) => (
+    res.sendFile(path.join(process.env.WORKING_DIR as string, 'static', 'html', 'save-jwt.html'))
+));
 
 export const TwitchAuthController: RestController = {
     router,

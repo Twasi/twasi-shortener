@@ -16,6 +16,7 @@ import {GetMeController} from "./graphql/authenticated/get-me.controller";
 import {ShortsQueryController} from "./graphql/public/shorts-query.controller";
 import {EditUrlsController} from "./graphql/authenticated/edit-urls.controller";
 import {OwnUrlCountsController} from "./graphql/authenticated/own-url-counts.controller";
+import {ExtensionAuthController} from "./rest/extension-auth.controller";
 
 export type DocumentNode = {
     readonly kind: 'Document';
@@ -28,6 +29,7 @@ export type GraphQLController = { typeDefs: Array<DocumentNode>, resolvers: Arra
 export const RestControllers: Array<RestController> = [
     StaticController,
     TwitchAuthController,
+    ExtensionAuthController,
     YourlsController,
     RedirectionController,
     FrontendController

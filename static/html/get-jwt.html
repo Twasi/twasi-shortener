@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+<body>
+<script>
+    window.addEventListener("message", async ev => {
+        const allowedOrigins = await (await fetch("/extension-authentication/permitted-extensions")).json();
+        const allowed = allowedOrigins.includes(ev.origin);
+        const response = {allowed};
+        if (allowed) response.JWT = localStorage.getItem('JWT') || null;
+        window.parent.postMessage(response, ev.origin);
+    });
+</script>
+</body>
+</html>
