@@ -27,7 +27,8 @@ export type ApolloContext = {
     ip: string,
     authorization?: DBUser,
     extension: Extension,
-    host: string
+    host: string,
+
 }
 
 // Create schema from GraphQL controllers

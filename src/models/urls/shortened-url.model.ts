@@ -1,4 +1,5 @@
 import {Document} from "mongoose";
+import {IURLTestResult} from "./tests/URLTestResult";
 
 export enum ShortenedUrlCreatorType {
     PUBLIC = "PUBLIC",
@@ -18,7 +19,10 @@ export interface ShortenedUrlModel {
     },
     hits?: number,
     urlNumber?: number,
-    classification?: boolean
+    classification?: boolean,
+    latestTest?: {
+        MESSAGE: string
+    } & IURLTestResult
 }
 
 export interface DBShortenedUrl extends ShortenedUrlModel, Document {

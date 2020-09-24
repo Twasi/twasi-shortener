@@ -53,7 +53,8 @@ export const createUrl = async (
             ),
             id: user?._id,
             ip
-        }
+        },
+        latestTest: result
     };
     const dbNewRedirection = new DBShortenedUrlModel(newRedirection);
 

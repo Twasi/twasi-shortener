@@ -2,6 +2,7 @@ import * as mongoose from "mongoose";
 import {Model, Schema} from "mongoose";
 import {DBShortenedUrl, ShortenedUrlCreatorType} from "../../models/urls/shortened-url.model";
 import {RedirectsConfig, TagsConfig} from "../../config/app-config";
+import {URLTestResultCodes} from "../../models/urls/tests/URLTestResults";
 
 const CreatorSubSchema = new Schema({
     type: {
@@ -18,6 +19,20 @@ const CreatorSubSchema = new Schema({
         required: false,
     }
 });
+
+const UrlTestSchema = new Schema({
+    STATUS: {
+        type: String,
+        enum: Object.keys(URLTestResultCodes),
+        required: true
+    },
+    CRITICAL: {
+        type: Boolean
+    },
+    DATA: {
+        type: Object
+    }
+}, {timestamps: true});
 
 export const DBShortenedUrlSchema = new Schema<DBShortenedUrl>({
     short: {
@@ -62,8 +77,12 @@ export const DBShortenedUrlSchema = new Schema<DBShortenedUrl>({
     classification: {
         type: Boolean,
         required: false
+    },
+    latestTest: {
+        type: UrlTestSchema
     }
-});
+}, {timestamps: true});
+
 DBShortenedUrlSchema.virtual('urlNumber').get(async function () {
     // @ts-ignore
     return DBShortenedUrlModel.countDocuments({created: {$lte: this.created}, short: this.short});
