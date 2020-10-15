@@ -26,7 +26,7 @@ export const AuthenticatedUrlCreationController: GraphQLController = {
                     if (!await canUserUseShort(context.authorization, args.short))
                         throw new Error('Sorry, you cannot use this short.');
 
-                    return await createUrl(args.short, args.redirection, {
+                    return await createUrl(false, args.short, args.redirection, {
                         ip: context.ip,
                         user: context.authorization
                     }, args.tag, context.host);

@@ -24,7 +24,7 @@ const UrlTestSchema = new Schema({
     STATUS: {
         type: String,
         enum: Object.keys(URLTestResultCodes),
-        required: true
+        required: false
     },
     CRITICAL: {
         type: Boolean
@@ -79,7 +79,8 @@ export const DBShortenedUrlSchema = new Schema<DBShortenedUrl>({
         required: false
     },
     latestTest: {
-        type: UrlTestSchema
+        type: UrlTestSchema,
+        required: false,
     }
 }, {timestamps: true});
 

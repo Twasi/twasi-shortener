@@ -10,8 +10,10 @@ import {Extension} from "../../../config/templates/extension.config";
 import {autoClassify} from "../../classification/auto-classify.routine";
 import {testUrl} from "../tests/test-url.routine";
 import {URLTestResultCodes} from "../../../models/urls/tests/URLTestResults";
+import {URLTestResult} from "../../../models/urls/tests/URLTestResult";
 
 export const createUrl = async (
+    forceCheck: boolean,
     short: string,
     redirection: string,
     {user, ip}: { user?: DBUser, ip: string } | { user: DBUser, ip?: string },
@@ -30,15 +32,18 @@ export const createUrl = async (
     if ((user && !await canUserCreateUrl(user, short)) || (ip && !await canIpCreatePublicUrl(ip)))
         throw new Error("You are creating too many redirections. Please cool it down.");
 
-    const {result} = await testUrl(redirection, host ? {hostname: host} : undefined);
-    if ([
-        URLTestResultCodes.NOT_EXISTING,
-        URLTestResultCodes.SAME_HOST,
-        URLTestResultCodes.UNKNOWN,
-        URLTestResultCodes.TOO_MANY_REDIRECTIONS,
-        URLTestResultCodes.BAD_URL
-    ].includes(result.STATUS))
-        throw new Error(result.MESSAGE);
+    let result: URLTestResult | undefined;
+    if (forceCheck) {
+        result = (await testUrl(redirection, host ? {hostname: host} : undefined)).result;
+        if ([
+            URLTestResultCodes.NOT_EXISTING,
+            URLTestResultCodes.SAME_HOST,
+            URLTestResultCodes.UNKNOWN,
+            URLTestResultCodes.TOO_MANY_REDIRECTIONS,
+            URLTestResultCodes.BAD_URL
+        ].includes(result.STATUS))
+            throw new Error(result.MESSAGE);
+    }
 
     // Create new redirection
     const newRedirection: ShortenedUrlModel = {
@@ -80,5 +85,6 @@ export const createUrl = async (
 }
 
 export const createPublicUrl = async (redirection: string, ip: string, extension: Extension, host: string, tag?: string): Promise<DBShortenedUrl> => {
-    return await createUrl(extension !== false ? ShortsConfig.extension : ShortsConfig.public, redirection, {ip}, tag, host);
+    return await createUrl(true,
+        extension !== false ? ShortsConfig.extension : ShortsConfig.public, redirection, {ip}, tag, host);
 }

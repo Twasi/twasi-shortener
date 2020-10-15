@@ -8,14 +8,16 @@ import {testUrl} from "../../../routines/urls/tests/test-url.routine";
 async function findRedirection(short: string, tag: string): Promise<DBShortenedUrl | null> {
     const result = await DBShortenedUrlModel.findOne({short, tag});
     if (result) {
-        typeof result.hits === "number" ? result.hits++ : result.hits = 0;
-        result.save().then(() => publishUrlUpdate(result).then());
+        (async () => {
+            typeof result.hits === "number" ? result.hits++ : result.hits = 1;
+            publishUrlUpdate(result).then();
 
-        // TODO Don't test every time
-        testUrl(result.redirection).then(({result: testResult}) => {
-            result.latestTest = testResult;
-            result.save();
-        });
+            // TODO Don't test every time
+            const {result: testResult} = await testUrl(result.redirection);
+            result.latestTest = Object.assign(result.latestTest || {}, testResult);
+            result.markModified('latestTest');
+            await result.save();
+        })().then();
 
         return result;
     }
